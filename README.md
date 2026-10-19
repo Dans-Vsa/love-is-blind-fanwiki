@@ -1,5 +1,7 @@
 # 恋は盲目 · Love is Blind — Fan Wiki
 
+**Live:** https://dans-vsa.github.io/love-is-blind-fanwiki/
+
 A fan-made, bilingual (EN / ID) semi-wiki and fanblog for **_Love is Blind_ (恋は盲目, Koi wa Mōmoku)**, the 31-page debut one-shot by **Tatsuki Fujimoto**. It won an honorable mention at the 9th Crown Newcomer Manga Award (2013), was published in *Jump SQ.19* Vol. 13 (2014), and is collected in *17-21* (VIZ: *Tatsuki Fujimoto Before Chainsaw Man: 17-21*).
 
 The design takes its cue from the manga itself: black ink on newsprint, screentone halftone, thick panel gutters, diagonal downpour lines, speech-bubble quotes, onomatopoeia, and **one red accent** reserved for the confession.
@@ -121,8 +123,8 @@ If you add new Japanese characters to display text, run `npm run fonts` so the d
 
 ## Deploy
 
-- **Vercel**: import the repo. The framework preset "Astro" is detected and needs no config. Set the `SITE` env var to your production URL.
-- **GitHub Pages**: build with `SITE=https://<user>.github.io BASE=/<repo> npm run build` and publish `dist/` (e.g. with `actions/deploy-pages`).
+- **GitHub Pages (current)**: `.github/workflows/deploy.yml` builds and deploys on every push to `main`, using `withastro/action` and `actions/deploy-pages`. It sets `SITE=https://dans-vsa.github.io` and `BASE=/love-is-blind-fanwiki`, then runs the link checker before publishing. You can also run it manually from the Actions tab.
+- **Vercel (alternative)**: import the repo (the Astro preset is auto-detected), set `SITE` to the production URL and leave `BASE` unset.
 
 ## Sources and accuracy
 

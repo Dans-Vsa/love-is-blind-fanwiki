@@ -5,7 +5,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
 // Set SITE (e.g. https://<user>.github.io) and BASE (e.g. /love-is-blind) for GitHub Pages.
-const site = process.env.SITE ?? 'https://love-is-blind-fanwiki.vercel.app';
+const site = process.env.SITE ?? 'https://dans-vsa.github.io';
 const base = process.env.BASE ?? '/';
 
 export default defineConfig({
