@@ -1,1 +1,270 @@
 @import "tailwindcss";
+@import "@fontsource/dela-gothic-one/400.css";
+@import "@fontsource-variable/source-serif-4/index.css";
+@import "@fontsource-variable/source-serif-4/wght-italic.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/600.css";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ── Tokens (see DESIGN.md) ─────────────────────────────── */
+@theme {
+  --font-display: "Dela Gothic One", "Arial Black", system-ui, sans-serif;
+  --font-serif: "Source Serif 4 Variable", Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-raised: var(--raised);
+  --color-tone-10: var(--tone-10);
+  --color-tone-30: var(--tone-30);
+  --color-tone-60: var(--tone-60);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+}
+
+:root {
+  --ink: #0b0b0b;
+  --paper: #f4f1ea;
+  --raised: #ffffff;
+  --tone-10: #e4e0d7;
+  --tone-30: #b9b4aa;
+  --tone-60: #5f5b54;
+  --accent: #d7192d;
+  --accent-ink: #ffffff;
+  --panel-border: 3px;
+  --gutter: 12px;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --ink: #edeae3;
+  --paper: #0e0e10;
+  --raised: #17171a;
+  --tone-10: #232327;
+  --tone-30: #3a3a40;
+  --tone-60: #a8a399;
+  --accent: #ff3b4e;
+  --accent-ink: #0e0e10;
+  color-scheme: dark;
+}
+
+/* ── Base ───────────────────────────────────────────────── */
+@layer base {
+  html {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-serif);
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    min-height: 100dvh;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    /* subtle newsprint grain made of dots */
+    background-image: radial-gradient(color-mix(in srgb, var(--ink) 6%, transparent) 0.6px, transparent 0.7px);
+    background-size: 4px 4px;
+  }
+  ::selection { background: var(--accent); color: var(--accent-ink); }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  a { text-underline-offset: 0.18em; text-decoration-thickness: 2px; }
+  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height: 1.05; letter-spacing: -0.01em; }
+  img { max-width: 100%; height: auto; }
+}
+
+/* ── Manga components ───────────────────────────────────── */
+@layer components {
+  .meta { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* A manga panel: thick border + flat print-offset shadow */
+  .panel {
+    position: relative;
+    background: var(--raised);
+    border: var(--panel-border) solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .panel-link { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+  .panel-link:hover, .panel-link:focus-within { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--ink); }
+  .panel-caption {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.2rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Screentone (halftone) fills — pure CSS, no images */
+  .tone { background-image: radial-gradient(var(--ink) 1.1px, transparent 1.3px); background-size: 7px 7px; }
+  .tone-light { background-image: radial-gradient(color-mix(in srgb, var(--ink) 35%, transparent) 1px, transparent 1.2px); background-size: 6px 6px; }
+  .tone-fade {
+    background-image: radial-gradient(var(--ink) 1.3px, transparent 1.5px);
+    background-size: 8px 8px;
+    mask-image: linear-gradient(to bottom, #000, transparent);
+  }
+  .tone-accent { background-image: radial-gradient(var(--accent) 1.6px, transparent 1.8px); background-size: 8px 8px; }
+
+  /* Downpour: diagonal rain / speed lines */
+  .rain {
+    background-image: repeating-linear-gradient(
+      105deg,
+      transparent 0 14px,
+      color-mix(in srgb, currentColor 22%, transparent) 14px 15px,
+      transparent 15px 31px,
+      color-mix(in srgb, currentColor 12%, transparent) 31px 32px
+    );
+  }
+
+  /* Speech bubble */
+  .bubble {
+    position: relative;
+    background: var(--raised);
+    color: var(--ink);
+    border: var(--panel-border) solid var(--ink);
+    border-radius: 999px / 70%;
+    padding: 1.4rem 2.2rem;
+  }
+  .bubble::after {
+    content: "";
+    position: absolute;
+    left: 18%;
+    bottom: -26px;
+    width: 34px;
+    height: 30px;
+    background: var(--ink);
+    clip-path: polygon(0 0, 100% 0, 10% 100%);
+  }
+  .bubble::before {
+    content: "";
+    position: absolute;
+    left: calc(18% + 4px);
+    bottom: -17px;
+    width: 24px;
+    height: 22px;
+    background: var(--raised);
+    clip-path: polygon(0 0, 100% 0, 10% 100%);
+    z-index: 1;
+  }
+  .bubble-shout { border-radius: 0; clip-path: polygon(0% 12%, 8% 0%, 20% 9%, 33% 0%, 47% 8%, 60% 0%, 73% 9%, 86% 0%, 100% 10%, 95% 30%, 100% 50%, 94% 70%, 100% 90%, 86% 100%, 72% 92%, 58% 100%, 44% 92%, 30% 100%, 16% 92%, 0% 100%, 5% 75%, 0% 52%, 6% 30%); }
+
+  /* Onomatopoeia decoration */
+  .sfx {
+    font-family: var(--font-display);
+    color: transparent;
+    -webkit-text-stroke: 2px var(--ink);
+    line-height: 0.9;
+    user-select: none;
+    pointer-events: none;
+  }
+  .sfx-solid { color: var(--ink); -webkit-text-stroke: 0; }
+  .sfx-accent { -webkit-text-stroke-color: var(--accent); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    border: var(--panel-border) solid var(--ink);
+    padding: 0.7rem 1.2rem;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+  .btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-ghost { background: var(--raised); color: var(--ink); }
+
+  .tag { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; border: 1.5px solid var(--ink); padding: 0.05rem 0.45rem; }
+  .unverified { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; border: 1.5px dashed var(--accent); color: var(--accent); padding: 0 0.35rem; white-space: nowrap; }
+
+  /* Long-form prose (wiki + blog) */
+  .prose-manga { max-width: 68ch; }
+  .prose-manga > * + * { margin-top: 1.1em; }
+  .prose-manga h2 {
+    margin-top: 2.4em;
+    font-size: clamp(1.6rem, 3vw, 2.3rem);
+    padding-bottom: 0.3em;
+    border-bottom: var(--panel-border) solid var(--ink);
+  }
+  .prose-manga h3 { margin-top: 1.8em; font-size: 1.35rem; }
+  .prose-manga a { color: inherit; text-decoration-color: var(--accent); }
+  .prose-manga a:hover { color: var(--accent); }
+  .prose-manga ul { list-style: square; padding-left: 1.3em; }
+  .prose-manga ol { list-style: decimal; padding-left: 1.5em; }
+  .prose-manga li + li { margin-top: 0.35em; }
+  .prose-manga li::marker { color: var(--accent); }
+  .prose-manga strong { font-weight: 700; }
+  .prose-manga blockquote {
+    border-left: 6px solid var(--ink);
+    padding: 0.4em 0 0.4em 1.1em;
+    font-style: italic;
+  }
+  .prose-manga table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+  .prose-manga th, .prose-manga td { border: 1.5px solid var(--ink); padding: 0.45rem 0.6rem; text-align: left; vertical-align: top; }
+  .prose-manga th { background: var(--tone-10); font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .prose-manga hr { border: 0; height: 14px; background-image: radial-gradient(var(--ink) 1.2px, transparent 1.4px); background-size: 7px 7px; }
+  .prose-manga code { font-family: var(--font-mono); font-size: 0.88em; background: var(--tone-10); padding: 0.05em 0.3em; }
+  .prose-manga .table-wrap { overflow-x: auto; }
+
+  /* Spoiler */
+  .spoiler { position: relative; border: var(--panel-border) dashed var(--ink); padding: 1rem 1.2rem; margin-block: 1.4rem; }
+  .spoiler-body { transition: filter 0.35s ease; }
+  .spoiler[data-open="false"] .spoiler-body { filter: blur(10px); user-select: none; max-height: 14rem; overflow: hidden; }
+  .spoiler[data-open="false"] .spoiler-veil { display: grid; }
+  .spoiler-veil {
+    display: none;
+    position: absolute;
+    inset: 0;
+    place-items: center;
+    background-image: radial-gradient(color-mix(in srgb, var(--ink) 45%, transparent) 1.2px, transparent 1.4px);
+    background-size: 6px 6px;
+    background-color: color-mix(in srgb, var(--paper) 55%, transparent);
+  }
+
+}
+
+/* Panel reveal: panels wipe in from the left as they scroll into view.
+   Pure CSS scroll-driven animation; browsers without support (or with
+   reduced motion) simply show the panels. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: panel-in linear both;
+      animation-timeline: view();
+      animation-range: entry calc(var(--i, 0) * 6%) entry calc(55% + var(--i, 0) * 6%);
+    }
+  }
+}
+
+@keyframes panel-in {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@keyframes rain-fall { to { background-position: -64px 260px; } }
+@keyframes jitter {
+  0%, 100% { transform: translate(0, 0) rotate(var(--r, -8deg)); }
+  25% { transform: translate(-2px, 1px) rotate(var(--r, -8deg)); }
+  75% { transform: translate(2px, -1px) rotate(var(--r, -8deg)); }
+}
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  12% { transform: scale(1.08); }
+  24% { transform: scale(0.98); }
+  36% { transform: scale(1.05); }
+}
+
+.animate-rain { animation: rain-fall 1.4s linear infinite; }
+.animate-heart { animation: heartbeat 2.4s ease-in-out infinite; transform-origin: center; }
+.hover-jitter:hover .sfx, .sfx-jitter { animation: jitter 0.25s steps(2) infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
