@@ -1,0 +1,124 @@
+---
+// Official anime previews. A thumbnail "facade" stands in for the player; the
+// youtube-nocookie iframe is only created after the reader presses play.
+import Picture from './Picture.astro';
+import Sfx from './Sfx.astro';
+import { useTranslations, type Locale } from '../i18n';
+
+interface Props { lang: Locale; headingLevel?: 'h2' | 'h3' }
+const { lang, headingLevel = 'h2' } = Astro.props;
+const t = useTranslations(lang);
+const Heading = headingLevel;
+
+const videos = [
+  { id: 'bnnbCdR6sIE', key: 'pv', thumb: 'official/pv-love-is-blind', label: t('trailer.tab.pv'), source: t('trailer.source.pv') },
+  { id: 'NRxLpXAqWiw', key: 'trailer', thumb: 'official/pv-17-26-trailer', label: t('trailer.tab.trailer'), source: t('trailer.source.trailer') },
+];
+const uid = `tp-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<section class="trailer" data-trailer aria-labelledby={`${uid}-title`}>
+  <div class="mb-5 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <Heading id={`${uid}-title`} class="!m-0 !border-0 !p-0 font-display text-3xl sm:text-4xl">{t('trailer.title')}</Heading>
+      <p class="mt-2 max-w-xl text-tone-60">{t('trailer.lede')}</p>
+    </div>
+    <div class="flex border-[3px] border-ink" role="tablist" aria-label={t('trailer.title')}>
+      {
+        videos.map((v, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`${uid}-tab-${v.key}`}
+            aria-controls={`${uid}-panel-${v.key}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? 0 : -1}
+            class="meta px-3 py-2 aria-selected:bg-ink aria-selected:text-paper"
+          >
+            {v.label}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  {
+    videos.map((v, i) => (
+      <div
+        role="tabpanel"
+        id={`${uid}-panel-${v.key}`}
+        aria-labelledby={`${uid}-tab-${v.key}`}
+        hidden={i !== 0}
+      >
+        <div class="panel relative aspect-video overflow-hidden bg-[#0b0b0b]" data-video={v.id} data-title={v.label}>
+          <button type="button" class="trailer-facade group absolute inset-0 block w-full cursor-pointer">
+            <Picture name={v.thumb} width={960} height={540} alt="" pictureClass="block h-full w-full" class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02] group-hover:brightness-75" />
+            <span class="tone pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></span>
+            <span class="absolute inset-0 grid place-items-center">
+              <span class="bubble bubble-shout flex items-center gap-3 px-8 py-5 font-display text-xl text-ink transition-transform duration-200 group-hover:scale-110 group-active:scale-95">
+                <svg viewBox="0 0 24 24" class="size-7 fill-accent" aria-hidden="true"><path d="M6 4l14 8-14 8z"></path></svg>
+                {t('trailer.play')}
+                <span class="sr-only">: {v.label}</span>
+              </span>
+            </span>
+            <Sfx text="ドン" class="absolute right-4 bottom-2 text-6xl [-webkit-text-stroke-color:#f4f1ea]" rotate={-8} />
+          </button>
+        </div>
+        <p class="meta mt-3 flex flex-wrap justify-between gap-2 text-tone-60">
+          <span>{v.source}</span>
+          <a href={`https://www.youtube.com/watch?v=${v.id}`} rel="noopener" target="_blank" class="underline decoration-accent decoration-2">
+            {t('trailer.youtube')} ↗
+          </a>
+        </p>
+      </div>
+    ))
+  }
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-trailer]').forEach((root) => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+
+    const stopAll = () =>
+      root.querySelectorAll('iframe').forEach((f) => {
+        const holder = f.parentElement!;
+        f.remove();
+        holder.querySelector<HTMLElement>('.trailer-facade')!.hidden = false;
+      });
+
+    const select = (i: number, focus = false) => {
+      stopAll();
+      tabs.forEach((tab, j) => {
+        tab.setAttribute('aria-selected', String(i === j));
+        tab.tabIndex = i === j ? 0 : -1;
+        panels[j].hidden = i !== j;
+      });
+      if (focus) tabs[i].focus();
+    };
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(i));
+      tab.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') select((i + 1) % tabs.length, true);
+        if (e.key === 'ArrowLeft') select((i - 1 + tabs.length) % tabs.length, true);
+      });
+    });
+
+    root.querySelectorAll<HTMLElement>('[data-video]').forEach((holder) => {
+      const facade = holder.querySelector<HTMLButtonElement>('.trailer-facade')!;
+      facade.addEventListener('click', () => {
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube-nocookie.com/embed/${holder.dataset.video}?autoplay=1&rel=0&modestbranding=1`;
+        iframe.title = holder.dataset.title ?? 'YouTube video';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.allowFullscreen = true;
+        iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+        iframe.className = 'absolute inset-0 h-full w-full';
+        facade.hidden = true;
+        holder.append(iframe);
+        iframe.focus();
+      });
+    });
+  });
+</script>
