@@ -1,0 +1,35 @@
+---
+title: Characters
+description: Wiki infoboxes for Ibuki, Yuri Kōnosu and everyone (and everything) that interrupts them.
+order: 2
+kanji: 人
+spoilers: false
+sources: [wiki-before-csm, jumpsq-crown-9, jumpsq-tweet-2016, ashley-manning, tvtropes-fujimoto]
+updated: 2026-10-20
+---
+import Infobox from '../../../components/Infobox.astro';
+import { characters } from '../../../data/characters';
+
+The cast is tiny: two leads and a series of escalating interruptions. Japanese names and voice actors come from the anime *Tatsuki Fujimoto 17-26* (episode 3). Where the anime adds a character the manga sources don't confirm, it's marked *unverified*.
+
+## Main characters
+
+<div class="not-prose grid gap-[var(--gutter)]">
+  {characters.slice(0, 2).map((c, i) => <Infobox lang="en" character={c} index={i} />)}
+</div>
+
+## The interruptions
+
+<div class="not-prose grid gap-[var(--gutter)]">
+  {characters.slice(2).map((c, i) => <Infobox lang="en" character={c} index={i} />)}
+</div>
+
+## Relationship map
+
+| From | To | Relation |
+| --- | --- | --- |
+| Ibuki | Yuri | Senpai, council president; in love with her |
+| Yuri | Ibuki | Kōhai, vice-president; "Osu!" |
+| Robber, Alien | Ibuki | Obstacles between him and the confession |
+
+The voice cast for the English dub is listed on Wikipedia; Japanese names (伊吹, 鴻巣ユリ) are written as in the anime's credits.

@@ -1,0 +1,34 @@
+---
+import Base from '../../../layouts/Base.astro';
+import WikiCard from '../../../components/WikiCard.astro';
+import SearchBox from '../../../components/SearchBox.astro';
+import Sfx from '../../../components/Sfx.astro';
+import { getStaticLocalePaths, useTranslations, type Locale } from '../../../i18n';
+import { getWiki } from '../../../lib/content';
+
+export const getStaticPaths = getStaticLocalePaths;
+
+const lang = Astro.params.lang as Locale;
+const t = useTranslations(lang);
+const wiki = await getWiki(lang);
+---
+
+<Base lang={lang} title={t('wiki.title')} description={t('wiki.lede')}>
+  <header class="relative overflow-hidden border-b-[3px] border-ink bg-raised">
+    <div class="relative mx-auto max-w-7xl px-4 py-12 sm:px-6">
+      <p class="meta text-tone-60">恋は盲目 · Wiki</p>
+      <h1 class="mt-3 font-display text-[clamp(3rem,8vw,6rem)] leading-none">{t('wiki.title')}</h1>
+      <p class="mt-4 max-w-2xl text-lg">{t('wiki.lede')}</p>
+      <div class="mt-8 max-w-2xl">
+        <SearchBox lang={lang} />
+      </div>
+      <Sfx text="パラ" class="absolute top-8 right-8 hidden text-8xl md:block" rotate={8} />
+    </div>
+  </header>
+
+  <section class="mx-auto max-w-7xl px-4 py-10 sm:px-6" aria-label={t('home.sections')}>
+    <ul class="grid grid-cols-1 gap-[var(--gutter)] sm:grid-cols-2 lg:grid-cols-4">
+      {wiki.map((entry, i) => <li class:list={[i === 0 && 'sm:col-span-2 lg:row-span-2']}><WikiCard lang={lang} entry={entry} index={i} large={i === 0} /></li>)}
+    </ul>
+  </section>
+</Base>

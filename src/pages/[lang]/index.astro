@@ -1,0 +1,119 @@
+---
+import Base from '../../layouts/Base.astro';
+import HeroArt from '../../components/HeroArt.astro';
+import Sfx from '../../components/Sfx.astro';
+import Picture from '../../components/Picture.astro';
+import SpeechBubble from '../../components/SpeechBubble.astro';
+import WikiCard from '../../components/WikiCard.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getStaticLocalePaths, localePath, useTranslations, type Locale } from '../../i18n';
+import { getPosts, getWiki } from '../../lib/content';
+
+export const getStaticPaths = getStaticLocalePaths;
+
+const lang = Astro.params.lang as Locale;
+const t = useTranslations(lang);
+const wiki = await getWiki(lang);
+const posts = (await getPosts(lang)).slice(0, 3);
+
+const facts = [
+  { k: t('home.facts.jp'), v: '恋は盲目 (Koi wa Mōmoku)', ja: true },
+  { k: t('home.facts.author'), v: 'Tatsuki Fujimoto (藤本タツキ)' },
+  { k: t('home.facts.first'), v: lang === 'id' ? 'Jump SQ.19 Vol. 13, 2014 (31 hlm.)' : 'Jump SQ.19 Vol. 13, 2014 (31 pp.)' },
+  { k: t('home.facts.collected'), v: lang === 'id' ? '17-21, bab 3 (Shueisha 2021 · VIZ 2023)' : '17-21, chapter 3 (Shueisha 2021 · VIZ 2023)' },
+  { k: t('home.facts.anime'), v: lang === 'id' ? 'Tatsuki Fujimoto 17-26, ep. 3 (Lapin Track, 2025)' : 'Tatsuki Fujimoto 17-26, ep. 3 (Lapin Track, 2025)' },
+];
+---
+
+<Base lang={lang}>
+  <!-- HERO: an irregular manga page -->
+  <section class="mx-auto max-w-7xl px-4 pt-6 sm:px-6 sm:pt-10" aria-labelledby="hero-title">
+    <div class="grid gap-[var(--gutter)] lg:grid-cols-12">
+      <div class="panel reveal relative overflow-hidden bg-raised p-6 sm:p-10 lg:col-span-7 lg:row-span-2" style="--i:0">
+        <div class="tone-fade pointer-events-none absolute inset-x-0 top-0 h-40 opacity-20" aria-hidden="true"></div>
+        <p class="meta relative text-tone-60">{t('home.kicker')}</p>
+        <h1 id="hero-title" class="relative mt-4 font-display text-[clamp(3.6rem,11vw,8.5rem)] leading-[0.88] uppercase">
+          <span class="block">{t('home.title.1')}</span>
+          <span class="block">{t('home.title.2').split(' ')[0]} <span class="text-accent">{t('home.title.2').split(' ')[1]}</span></span>
+        </h1>
+        <p class="relative mt-2 font-display text-3xl sm:text-4xl" lang="ja">恋は盲目</p>
+        <p class="relative mt-6 max-w-xl text-lg leading-relaxed sm:text-xl">{t('home.lede')}</p>
+        <div class="relative mt-8 flex flex-wrap gap-4">
+          <a class="btn btn-primary" href={localePath(lang, 'wiki')}>{t('home.cta.wiki')} →</a>
+          <a class="btn btn-ghost" href={localePath(lang, 'blog')}>{t('home.cta.blog')}</a>
+        </div>
+        <p class="meta relative mt-8 flex items-center gap-2 text-tone-60">
+          <span class="inline-block size-2.5 bg-accent" aria-hidden="true"></span>
+          {t('home.nospoiler')}
+        </p>
+        <Sfx text="ドキ" class="absolute top-6 right-4 hidden text-[5.5rem] sm:block xl:text-[7rem]" rotate={-12} accent jitter />
+      </div>
+
+      <div class="panel reveal relative min-h-[26rem] overflow-hidden bg-[#0b0b0b] lg:col-span-5" style="--i:1">
+        <HeroArt class="absolute inset-0 block h-full w-full" title={lang === 'id' ? 'Ilustrasi orisinal: dua sosok berjalan pulang di bawah hujan deras, piring terbang di atas, satu hati merah' : 'Original illustration: two figures walking home in a downpour, a flying saucer above, one red heart'} />
+        <Sfx text="ザアアア" class="absolute top-4 left-4 text-5xl [-webkit-text-stroke-color:#f4f1ea]" rotate={6} />
+      </div>
+    </div>
+  </section>
+
+  <!-- FACT FILE + COVER -->
+  <section class="mx-auto mt-[var(--gutter)] max-w-7xl px-4 sm:px-6" aria-labelledby="facts-title">
+    <div class="grid gap-[var(--gutter)] md:grid-cols-12">
+      <div class="panel reveal p-6 md:col-span-8" style="--i:0">
+        <h2 id="facts-title" class="panel-caption">{t('home.facts.title')}</h2>
+        <dl class="mt-4 grid gap-x-6 sm:grid-cols-[auto_1fr]">
+          {
+            facts.map((f) => (
+              <>
+                <dt class="meta border-t border-ink pt-2 pb-1 text-tone-60 sm:pb-2">{f.k}</dt>
+                <dd class="pb-2 sm:border-t sm:border-ink sm:pt-2" lang={f.ja ? 'ja' : undefined}>{f.v}</dd>
+              </>
+            ))
+          }
+        </dl>
+      </div>
+      <figure class="panel reveal flex flex-col items-center justify-center gap-3 p-4 md:col-span-4" style="--i:1">
+        <Picture
+          name="cover-17-21"
+          width={238}
+          height={375}
+          alt={lang === 'id' ? 'Sampul edisi Jepang 藤本タツキ短編集 17-21 (Shueisha), antologi tempat Love is Blind dikumpulkan' : 'Cover of the Japanese edition of 藤本タツキ短編集 17-21 (Shueisha), the anthology that collects Love is Blind'}
+          class="h-auto w-40 border-[3px] border-ink sm:w-48"
+        />
+        <figcaption class="meta text-center text-tone-60">17-21 · © Tatsuki Fujimoto / Shueisha</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <section class="mx-auto mt-16 max-w-7xl px-4 sm:px-6" aria-label="Quote">
+    <div class="relative grid items-center gap-6 md:grid-cols-[1fr_auto]">
+      <SpeechBubble cite={t('home.quote.caption')} class="md:ml-10">
+        “…that’s the least of my priorities!”
+      </SpeechBubble>
+      <Sfx text="ドン" class="text-[6rem] sm:text-[9rem]" rotate={-6} solid />
+    </div>
+  </section>
+
+  <!-- WIKI GRID -->
+  <section class="mx-auto mt-16 max-w-7xl px-4 sm:px-6" aria-labelledby="sections-title">
+    <h2 id="sections-title" class="mb-6 flex items-center gap-4 font-display text-3xl sm:text-4xl">
+      {t('home.sections')}
+      <span class="tone h-4 flex-1" aria-hidden="true"></span>
+    </h2>
+    <ul class="grid grid-cols-1 gap-[var(--gutter)] sm:grid-cols-2 lg:grid-cols-4">
+      {wiki.map((entry, i) => <li class:list={[i === 0 && 'sm:col-span-2 lg:row-span-2']}><WikiCard lang={lang} entry={entry} index={i} large={i === 0} /></li>)}
+    </ul>
+  </section>
+
+  <!-- LATEST POSTS -->
+  <section class="mx-auto mt-16 max-w-7xl px-4 sm:px-6" aria-labelledby="latest-title">
+    <h2 id="latest-title" class="mb-6 flex items-center gap-4 font-display text-3xl sm:text-4xl">
+      {t('home.latest')}
+      <span class="tone h-4 flex-1" aria-hidden="true"></span>
+    </h2>
+    <ul class="grid gap-[var(--gutter)] md:grid-cols-3">
+      {posts.map((p, i) => <li><PostCard lang={lang} entry={p} index={i} /></li>)}
+    </ul>
+  </section>
+</Base>

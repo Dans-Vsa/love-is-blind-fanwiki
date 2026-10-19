@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import Sfx from '../components/Sfx.astro';
+import { localePath, useTranslations } from '../i18n';
+
+const t = useTranslations('en');
+const ti = useTranslations('id');
+---
+
+<Base lang="en" title="404">
+  <section class="mx-auto grid max-w-5xl gap-[var(--gutter)] px-4 py-16 sm:px-6 md:grid-cols-2">
+    <div class="panel tone grid min-h-72 place-items-center bg-raised">
+      <Sfx text="シーン" class="bg-raised px-4 text-8xl" rotate={-6} solid />
+    </div>
+    <div class="panel p-8">
+      <p class="meta text-tone-60">404</p>
+      <h1 class="mt-2 font-display text-4xl">{t('404.title')}</h1>
+      <p class="mt-4">{t('404.body')}</p>
+      <p class="mt-4 text-tone-60" lang="id">{ti('404.body')}</p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a class="btn btn-primary" href={localePath('en')}>{t('404.back')}</a>
+        <a class="btn btn-ghost" href={localePath('id')} lang="id">{ti('404.back')}</a>
+      </div>
+    </div>
+  </section>
+</Base>
