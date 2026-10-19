@@ -1,12 +1,14 @@
 ---
 // Decorative onomatopoeia (擬音). Always aria-hidden: purely visual.
 interface Props { text: string; class?: string; rotate?: number; solid?: boolean; accent?: boolean; jitter?: boolean }
-const { text, class: className, rotate = -8, solid = false, accent = false, jitter = false } = Astro.props;
+const { text, class: className = '', rotate = -8, solid = false, accent = false, jitter = false } = Astro.props;
+// Default to inline-block unless the caller sets its own display (e.g. "hidden md:block").
+const hasDisplay = /(^|\s)(hidden|block|inline|inline-block|flex|grid)(\s|$)/.test(className);
 ---
 
 <span
   aria-hidden="true"
   lang="ja"
-  class:list={['sfx inline-block', solid && 'sfx-solid', accent && 'sfx-accent', jitter && 'sfx-jitter', className]}
+  class:list={['sfx', !hasDisplay && 'inline-block', solid && 'sfx-solid', accent && 'sfx-accent', jitter && 'sfx-jitter', className]}
   style={`--r:${rotate}deg; transform: rotate(${rotate}deg);`}>{text}</span
 >

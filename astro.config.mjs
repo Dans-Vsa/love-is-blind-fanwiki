@@ -12,6 +12,8 @@ export default defineConfig({
   site,
   base,
   trailingSlash: 'always',
+  // Inline CSS so first paint isn't blocked by a stylesheet request.
+  build: { inlineStylesheets: 'always' },
   vite: { plugins: [tailwindcss()] },
   integrations: [
     mdx(),

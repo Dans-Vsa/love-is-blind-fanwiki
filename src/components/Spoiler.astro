@@ -9,7 +9,7 @@ const id = `spoiler-${Math.random().toString(36).slice(2, 9)}`;
 
 <section class="spoiler" data-open="false" data-spoiler aria-labelledby={`${id}-label`}>
   <p id={`${id}-label`} class="meta mb-3 flex items-center gap-2">
-    <span class="bg-accent px-1.5 py-0.5 text-white">{t('spoiler.label')}</span>
+    <span class="bg-accent px-1.5 py-0.5 text-accent-ink">{t('spoiler.label')}</span>
     {title && <span>{title}</span>}
   </p>
   <div class="relative">

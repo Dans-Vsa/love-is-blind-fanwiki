@@ -38,7 +38,7 @@ const pageSources = entry.data.sources.map(sourceById).filter((s) => !!s);
   </nav>
   <div slot="meta" class="mt-5 flex flex-wrap items-center gap-3">
     <span class="meta text-tone-60">{t('wiki.updated')}: <time datetime={entry.data.updated.toISOString()}>{dateFormat(lang, entry.data.updated)}</time></span>
-    {entry.data.spoilers && <span class="meta bg-accent px-2 py-0.5 text-white">{t('wiki.spoilers')}</span>}
+    {entry.data.spoilers && <span class="meta bg-accent px-2 py-0.5 text-accent-ink">{t('wiki.spoilers')}</span>}
   </div>
 
   <Content />

@@ -18,7 +18,7 @@ const id = withBase('/id/');
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
     <script is:inline define:vars={{ en, id }}>
       let lang = null;
-      try { lang = localStorage.getItem('lang'); } catch (e) {}
+      try { lang = localStorage.getItem('lang'); } catch {}
       if (lang !== 'en' && lang !== 'id') {
         const prefs = navigator.languages || [navigator.language || 'en'];
         lang = prefs.some((l) => /^(id|ms)\b/i.test(l)) ? 'id' : 'en';

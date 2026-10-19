@@ -32,7 +32,7 @@ const { Content, headings } = await render(entry);
   </nav>
   <p slot="meta" class="meta mt-5 text-tone-60">
     {t('blog.by')} {entry.data.author} · <time datetime={entry.data.date.toISOString()}>{dateFormat(lang, entry.data.date)}</time> · {readingMinutes(entry)} {t('blog.minutes')}
-    {entry.data.spoilers && <span class="ml-2 bg-accent px-2 py-0.5 text-white">{t('wiki.spoilers')}</span>}
+    {entry.data.spoilers && <span class="ml-2 bg-accent px-2 py-0.5 text-accent-ink">{t('wiki.spoilers')}</span>}
   </p>
 
   <Content />
