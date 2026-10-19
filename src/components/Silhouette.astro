@@ -1,0 +1,66 @@
+---
+// Original, deliberately generic silhouettes: not character likenesses.
+interface Props { id: string; class?: string }
+const { id, class: className } = Astro.props;
+const isAlien = id === 'alien' || id === 'alien-bride';
+---
+
+<svg class={className} viewBox="0 0 100 140" aria-hidden="true" fill="currentColor">
+  {
+    isAlien && (
+      <g>
+        <ellipse cx="50" cy="40" rx="30" ry="34" />
+        <ellipse cx="38" cy="42" rx="9" ry="13" fill="var(--paper)" transform="rotate(-20 38 42)" />
+        <ellipse cx="62" cy="42" rx="9" ry="13" fill="var(--paper)" transform="rotate(20 62 42)" />
+        <path d="M30 18 L18 2 M70 18 L82 2" stroke="currentColor" stroke-width="4" />
+        <circle cx="18" cy="4" r="4" />
+        <circle cx="82" cy="4" r="4" />
+        <path d="M30 78 h40 l10 62 H20 Z" />
+        {id === 'alien-bride' && (
+          <path d="M14 30 Q50 -6 86 30 L92 120 Q50 100 8 120 Z" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="4 4" />
+        )}
+      </g>
+    )
+  }
+  {
+    id === 'robber' && (
+      <g>
+        <circle cx="50" cy="34" r="22" />
+        <rect x="30" y="28" width="40" height="10" fill="var(--paper)" />
+        <circle cx="41" cy="33" r="3" />
+        <circle cx="59" cy="33" r="3" />
+        <path d="M22 62 h56 l10 78 H12 Z" />
+      </g>
+    )
+  }
+  {
+    id === 'yuri' && (
+      <g>
+        <circle cx="50" cy="36" r="21" />
+        <path d="M28 30 Q50 4 72 30 L76 60 Q50 50 24 60 Z" />
+        <path d="M30 64 h40 l16 76 H14 Z" />
+        <path d="M40 64 L50 84 L60 64" fill="var(--paper)" />
+      </g>
+    )
+  }
+  {
+    id === 'hayasaka' && (
+      <g>
+        <circle cx="50" cy="34" r="21" />
+        <rect x="34" y="30" width="32" height="8" fill="none" stroke="var(--paper)" stroke-width="3" />
+        <path d="M24 62 h52 l8 78 H16 Z" />
+        <path d="M46 62 h8 l-2 30 h-4 Z" fill="var(--paper)" />
+      </g>
+    )
+  }
+  {
+    id === 'ibuki' && (
+      <g>
+        <circle cx="50" cy="34" r="21" />
+        <path d="M30 26 Q50 6 70 26 L70 22 Q50 2 30 22 Z" />
+        <path d="M24 62 h52 l8 78 H16 Z" />
+        <path d="M42 62 L50 80 L58 62" fill="var(--paper)" />
+      </g>
+    )
+  }
+</svg>

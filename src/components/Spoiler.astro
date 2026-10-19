@@ -1,0 +1,60 @@
+---
+import { useTranslations, type Locale } from '../i18n';
+
+interface Props { lang: Locale; title?: string }
+const { lang, title } = Astro.props;
+const t = useTranslations(lang);
+const id = `spoiler-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<section class="spoiler" data-open="false" data-spoiler aria-labelledby={`${id}-label`}>
+  <p id={`${id}-label`} class="meta mb-3 flex items-center gap-2">
+    <span class="bg-accent px-1.5 py-0.5 text-white">{t('spoiler.label')}</span>
+    {title && <span>{title}</span>}
+  </p>
+  <div class="relative">
+    <div id={id} class="spoiler-body" tabindex="-1" inert>
+      <slot />
+    </div>
+    <div class="spoiler-veil">
+      <button
+        type="button"
+        class="btn btn-ghost"
+        aria-controls={id}
+        aria-expanded="false"
+        data-show={t('spoiler.show')}
+        data-hide={t('spoiler.hide')}
+      >
+        {t('spoiler.show')}
+      </button>
+    </div>
+  </div>
+  <button
+    type="button"
+    class="spoiler-hide meta mt-3 hidden underline decoration-accent decoration-2"
+    aria-controls={id}
+    aria-expanded="true"
+  >
+    {t('spoiler.hide')}
+  </button>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-spoiler]').forEach((box) => {
+    const body = box.querySelector<HTMLElement>('.spoiler-body');
+    const showBtn = box.querySelector<HTMLButtonElement>('.spoiler-veil button');
+    const hideBtn = box.querySelector<HTMLButtonElement>('.spoiler-hide');
+    const set = (open: boolean) => {
+      box.dataset.open = String(open);
+      if (body) body.inert = !open;
+      showBtn?.setAttribute('aria-expanded', String(open));
+      hideBtn?.classList.toggle('hidden', !open);
+      if (open) body?.focus?.();
+    };
+    showBtn?.addEventListener('click', () => set(true));
+    hideBtn?.addEventListener('click', () => {
+      set(false);
+      showBtn?.focus();
+    });
+  });
+</script>

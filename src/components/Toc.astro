@@ -1,0 +1,48 @@
+---
+import type { MarkdownHeading } from 'astro';
+import { useTranslations, type Locale } from '../i18n';
+
+interface Props { lang: Locale; headings: MarkdownHeading[] }
+const { lang, headings } = Astro.props;
+const t = useTranslations(lang);
+const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  items.length > 1 && (
+    <nav class="toc panel p-4 lg:sticky lg:top-24" aria-label={t('toc.title')}>
+      <p class="panel-caption mb-3">{t('toc.title')}</p>
+      <ol class="space-y-1.5 text-sm">
+        {items.map((h) => (
+          <li class:list={[h.depth === 3 && 'pl-4']}>
+            <a href={`#${h.slug}`} data-toc-link={h.slug} class="block border-l-4 border-transparent pl-2 no-underline hover:border-ink">
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
+<script>
+  // Highlight the section currently in view.
+  const links = new Map<string, HTMLElement>();
+  document.querySelectorAll<HTMLElement>('[data-toc-link]').forEach((a) => links.set(a.dataset.tocLink!, a));
+  if (links.size) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          links.forEach((a) => a.classList.remove('!border-accent', 'font-semibold'));
+          links.get(e.target.id)?.classList.add('!border-accent', 'font-semibold');
+        }
+      },
+      { rootMargin: '0px 0px -70% 0px' },
+    );
+    links.forEach((_, id) => {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
+    });
+  }
+</script>

@@ -1,0 +1,78 @@
+---
+// Original illustration for this site (not traced from the manga):
+// a downpour at night, two small figures on the road home, a saucer hovering
+// overhead, and one red heart — the only colour in the frame.
+interface Props { class?: string; title: string }
+const { class: className, title } = Astro.props;
+---
+
+<svg class={className} viewBox="0 0 600 720" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="hero-art-title" xmlns="http://www.w3.org/2000/svg">
+  <title id="hero-art-title">{title}</title>
+  <defs>
+    <pattern id="dots-s" width="7" height="7" patternUnits="userSpaceOnUse">
+      <circle cx="3.5" cy="3.5" r="1.4" fill="#f4f1ea"></circle>
+    </pattern>
+    <pattern id="dots-l" width="10" height="10" patternUnits="userSpaceOnUse">
+      <circle cx="5" cy="5" r="2.6" fill="#f4f1ea"></circle>
+    </pattern>
+    <pattern id="dots-red" width="9" height="9" patternUnits="userSpaceOnUse">
+      <circle cx="4.5" cy="4.5" r="2.4" fill="#d7192d"></circle>
+    </pattern>
+    <radialGradient id="beam-fade" cx="50%" cy="0%" r="100%">
+      <stop offset="0" stop-color="#fff" stop-opacity="1"></stop>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"></stop>
+    </radialGradient>
+    <mask id="beam-mask"><rect width="600" height="720" fill="url(#beam-fade)"></rect></mask>
+    <pattern id="rain" width="40" height="90" patternUnits="userSpaceOnUse" patternTransform="rotate(14)">
+      <line x1="6" y1="0" x2="6" y2="38" stroke="#f4f1ea" stroke-width="1.4" opacity=".55"></line>
+      <line x1="26" y1="44" x2="26" y2="70" stroke="#f4f1ea" stroke-width="1" opacity=".35"></line>
+    </pattern>
+  </defs>
+
+  <rect width="600" height="720" fill="#0b0b0b"></rect>
+
+  <!-- big halftone moon behind clouds -->
+  <circle cx="430" cy="170" r="150" fill="url(#dots-l)" opacity=".35"></circle>
+  <circle cx="430" cy="170" r="150" fill="none" stroke="#f4f1ea" stroke-width="3"></circle>
+
+  <!-- saucer -->
+  <g class="ufo">
+    <path d="M190 210 L120 560 L340 560 L270 210 Z" fill="url(#dots-s)" mask="url(#beam-mask)" opacity=".55"></path>
+    <ellipse cx="230" cy="196" rx="96" ry="22" fill="#0b0b0b" stroke="#f4f1ea" stroke-width="4"></ellipse>
+    <path d="M182 190 Q230 128 278 190 Z" fill="#0b0b0b" stroke="#f4f1ea" stroke-width="4"></path>
+    <circle cx="176" cy="200" r="5" fill="#f4f1ea"></circle>
+    <circle cx="205" cy="206" r="5" fill="#f4f1ea"></circle>
+    <circle cx="236" cy="207" r="5" fill="#f4f1ea"></circle>
+    <circle cx="266" cy="203" r="5" fill="#f4f1ea"></circle>
+    <circle cx="292" cy="196" r="5" fill="#f4f1ea"></circle>
+  </g>
+
+  <!-- road -->
+  <path d="M0 560 L600 520 L600 720 L0 720 Z" fill="#161616"></path>
+  <path d="M0 560 L600 520" stroke="#f4f1ea" stroke-width="4"></path>
+  <path d="M60 640 L180 632 M260 626 L380 618 M460 612 L580 604" stroke="#f4f1ea" stroke-width="6" stroke-dasharray="0" opacity=".6"></path>
+
+  <!-- two figures: the president and the vice-president, walking home -->
+  <g fill="#f4f1ea">
+    <!-- him -->
+    <circle cx="300" cy="438" r="17"></circle>
+    <path d="M284 458 h32 l7 72 h-12 l-4 -40 l-6 40 h-12 l-4 -40 l-4 40 h-12 Z"></path>
+    <!-- her -->
+    <circle cx="352" cy="452" r="15"></circle>
+    <path d="M338 470 h28 l12 58 h-52 Z"></path>
+    <rect x="340" y="528" width="7" height="16"></rect>
+    <rect x="357" y="528" width="7" height="16"></rect>
+  </g>
+
+  <!-- the only colour in the frame -->
+  <g class="animate-heart" style="transform-box: fill-box">
+    <path d="M326 404 C326 386 300 382 300 402 C300 382 274 386 274 404 C274 422 300 436 300 446 C300 436 326 422 326 404 Z"
+      transform="translate(27 -64) scale(1.1)" fill="url(#dots-red)" stroke="#d7192d" stroke-width="3"></path>
+  </g>
+
+  <!-- downpour on top of everything -->
+  <rect width="600" height="720" fill="url(#rain)" class="rain-layer"></rect>
+
+  <!-- panel border -->
+  <rect x="2" y="2" width="596" height="716" fill="none" stroke="#f4f1ea" stroke-width="4"></rect>
+</svg>

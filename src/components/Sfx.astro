@@ -1,0 +1,12 @@
+---
+// Decorative onomatopoeia (擬音). Always aria-hidden: purely visual.
+interface Props { text: string; class?: string; rotate?: number; solid?: boolean; accent?: boolean; jitter?: boolean }
+const { text, class: className, rotate = -8, solid = false, accent = false, jitter = false } = Astro.props;
+---
+
+<span
+  aria-hidden="true"
+  lang="ja"
+  class:list={['sfx inline-block', solid && 'sfx-solid', accent && 'sfx-accent', jitter && 'sfx-jitter', className]}
+  style={`--r:${rotate}deg; transform: rotate(${rotate}deg);`}>{text}</span
+>

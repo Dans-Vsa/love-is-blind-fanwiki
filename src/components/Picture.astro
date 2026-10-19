@@ -1,0 +1,20 @@
+---
+// Pre-optimised images live in /public/assets/img as .avif + .webp pairs.
+import { withBase } from '../i18n';
+interface Props { name: string; alt: string; width: number; height: number; class?: string; eager?: boolean }
+const { name, alt, width, height, class: className, eager = false } = Astro.props;
+const src = (ext: string) => withBase(`/assets/img/${name}.${ext}`);
+---
+
+<picture>
+  <source srcset={src('avif')} type="image/avif" />
+  <img
+    src={src('webp')}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={eager ? 'eager' : 'lazy'}
+    decoding="async"
+    class={className}
+  />
+</picture>

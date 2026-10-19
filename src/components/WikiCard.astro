@@ -1,0 +1,36 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { localePath, useTranslations, type Locale } from '../i18n';
+import { entrySlug } from '../lib/content';
+
+interface Props { lang: Locale; entry: CollectionEntry<'wiki'>; index?: number; large?: boolean }
+const { lang, entry, index = 0, large = false } = Astro.props;
+const t = useTranslations(lang);
+const num = String(entry.data.order).padStart(2, '0');
+---
+
+<a
+  href={localePath(lang, `wiki/${entrySlug(entry.id)}`)}
+  class:list={['panel panel-link reveal group relative flex h-full flex-col overflow-hidden p-5 no-underline', large && 'min-h-72 bg-ink text-paper']}
+  style={`--i:${index % 4}`}
+>
+  <span
+    aria-hidden="true"
+    lang="ja"
+    class:list={[
+      'pointer-events-none absolute -right-3 -bottom-6 font-display leading-none opacity-15 transition-transform duration-300 group-hover:-translate-y-1',
+      large ? 'text-[11rem]' : 'text-[6.5rem]',
+    ]}>{entry.data.kanji}</span
+  >
+  <span class:list={['meta', large ? 'text-tone-30' : 'text-tone-60']}>Panel {num}</span>
+  <h3 class:list={['mt-2 font-display', large ? 'text-4xl sm:text-5xl' : 'text-2xl']}>{entry.data.title}</h3>
+  <p class:list={['relative mt-3 text-[0.95rem] leading-snug', large ? 'max-w-md text-lg' : '']}>{entry.data.description}</p>
+  {
+    entry.data.spoilers && (
+      <span class="meta relative mt-auto inline-flex w-fit items-center gap-1.5 pt-4">
+        <span class="inline-block size-2 bg-accent" aria-hidden="true" />
+        {t('wiki.spoilers')}
+      </span>
+    )
+  }
+</a>

@@ -1,0 +1,121 @@
+---
+// Original fan illustrations (SVG/CSS). None are traced from the manga.
+import HeroArt from './HeroArt.astro';
+import Picture from './Picture.astro';
+import type { Locale } from '../i18n';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const id = lang === 'id';
+const cap = {
+  rain: id ? '01 · Hujan deras — garis hujan diagonal dan screentone' : '01 · Downpour: diagonal rain lines and screentone',
+  three: id ? '02 · Tiga gangguan — upacara, perampok, piring terbang' : '02 · Three interruptions: ceremony, robber, saucer',
+  rank: id ? '03 · Daftar prioritas Ibuki (tafsiran fans)' : '03 · Ibuki’s priority list (fan interpretation)',
+  you: id ? '04 · Satu kalimat' : '04 · One sentence',
+  hero: id ? '05 · Jalan pulang (ilustrasi utama situs)' : '05 · The road home (site key art)',
+  cover: id ? '06 · Sampul resmi 17-21 (© Tatsuki Fujimoto / Shueisha, fair use)' : '06 · Official 17-21 cover (© Tatsuki Fujimoto / Shueisha, fair use)',
+};
+---
+
+<div class="mt-8 grid gap-[var(--gutter)] sm:grid-cols-2">
+  <figure class="panel reveal overflow-hidden" style="--i:0">
+    <svg viewBox="0 0 400 300" role="img" aria-label={cap.rain} class="block w-full">
+      <defs>
+        <pattern id="g-rain" width="22" height="60" patternUnits="userSpaceOnUse" patternTransform="rotate(16)">
+          <line x1="4" y1="0" x2="4" y2="34" stroke="#f4f1ea" stroke-width="1.4"></line>
+        </pattern>
+        <pattern id="g-dots" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="1.8" fill="#f4f1ea"></circle></pattern>
+      </defs>
+      <rect width="400" height="300" fill="#0b0b0b"></rect>
+      <rect y="210" width="400" height="90" fill="url(#g-dots)" opacity=".4"></rect>
+      <rect width="400" height="300" fill="url(#g-rain)" opacity=".7"></rect>
+      <text x="30" y="120" font-family="Dela Gothic One" font-size="64" fill="none" stroke="#f4f1ea" stroke-width="2" transform="rotate(-6 30 120)">ザアアア</text>
+    </svg>
+    <figcaption class="meta border-t-[3px] border-ink p-3">{cap.rain}</figcaption>
+  </figure>
+
+  <figure class="panel reveal overflow-hidden" style="--i:1">
+    <svg viewBox="0 0 400 300" role="img" aria-label={cap.three} class="block w-full">
+      <rect width="400" height="300" fill="#f4f1ea"></rect>
+      <g stroke="#0b0b0b" stroke-width="4" fill="#fff">
+        <rect x="10" y="10" width="120" height="280"></rect>
+        <rect x="140" y="10" width="120" height="280"></rect>
+        <rect x="270" y="10" width="120" height="280"></rect>
+      </g>
+      <!-- ceremony: a rosette -->
+      <g transform="translate(70 150)">
+        <circle r="34" fill="#0b0b0b"></circle>
+        <circle r="18" fill="#f4f1ea"></circle>
+        <path d="M-14 30 L-24 82 L-4 70 L0 90 L6 34Z" fill="#0b0b0b"></path>
+      </g>
+      <!-- robber: masked head -->
+      <g transform="translate(200 150)">
+        <circle r="38" fill="#0b0b0b"></circle>
+        <rect x="-32" y="-12" width="64" height="16" fill="#f4f1ea"></rect>
+        <circle cx="-12" cy="-4" r="4" fill="#0b0b0b"></circle>
+        <circle cx="12" cy="-4" r="4" fill="#0b0b0b"></circle>
+      </g>
+      <!-- saucer -->
+      <g transform="translate(330 140)">
+        <ellipse rx="48" ry="12" fill="#0b0b0b"></ellipse>
+        <path d="M-24 -4 Q0 -40 24 -4Z" fill="#0b0b0b"></path>
+        <path d="M-20 12 L-40 120 L40 120 L20 12Z" fill="#0b0b0b" opacity=".2"></path>
+      </g>
+      <g font-family="Dela Gothic One" font-size="34" fill="#d7192d">
+        <text x="20" y="56">!</text><text x="150" y="56">!!</text><text x="280" y="56">!!!</text>
+      </g>
+    </svg>
+    <figcaption class="meta border-t-[3px] border-ink p-3">{cap.three}</figcaption>
+  </figure>
+
+  <figure class="panel reveal overflow-hidden" style="--i:2">
+    <svg viewBox="0 0 400 300" role="img" aria-label={cap.rank} class="block w-full">
+      <defs><pattern id="g-tone" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1" fill="#0b0b0b" opacity=".4"></circle></pattern></defs>
+      <rect width="400" height="300" fill="#fff"></rect>
+      <rect width="400" height="300" fill="url(#g-tone)"></rect>
+      <rect x="40" y="30" width="320" height="240" fill="#fff" stroke="#0b0b0b" stroke-width="4"></rect>
+      <g font-family="IBM Plex Mono, monospace" font-size="20" fill="#0b0b0b">
+        <text x="64" y="84" font-family="Dela Gothic One" font-size="26" fill="#d7192d">1. ♥</text>
+        <text x="64" y="134">{id ? '2. kelulusan' : '2. graduation'}</text>
+        <text x="64" y="174">{id ? '3. dompetku' : '3. my wallet'}</text>
+        <text x="64" y="214">{id ? '4. planet Bumi' : '4. planet Earth'}</text>
+      </g>
+      <path d="M60 128 H260 M60 168 H240 M60 208 H270" stroke="#0b0b0b" stroke-width="3"></path>
+    </svg>
+    <figcaption class="meta border-t-[3px] border-ink p-3">{cap.rank}</figcaption>
+  </figure>
+
+  <figure class="panel reveal overflow-hidden" style="--i:3">
+    <svg viewBox="0 0 400 300" role="img" aria-label={cap.you} class="block w-full">
+      <defs><pattern id="g-red" width="9" height="9" patternUnits="userSpaceOnUse"><circle cx="4.5" cy="4.5" r="2.2" fill="#d7192d"></circle></pattern></defs>
+      <rect width="400" height="300" fill="#0b0b0b"></rect>
+      <g stroke="#f4f1ea" stroke-width="2" opacity=".5">
+        {Array.from({ length: 36 }, (_, i) => {
+          const a = (i / 36) * Math.PI * 2;
+          return <line x1={200 + Math.cos(a) * 120} y1={150 + Math.sin(a) * 90} x2={200 + Math.cos(a) * 260} y2={150 + Math.sin(a) * 200} />;
+        })}
+      </g>
+      <ellipse cx="200" cy="150" rx="120" ry="72" fill="#fff" stroke="#0b0b0b" stroke-width="4"></ellipse>
+      <path d="M150 210 L130 260 L185 216Z" fill="#fff" stroke="#0b0b0b" stroke-width="4" stroke-linejoin="round"></path>
+      <path d="M152 209 L184 214" stroke="#fff" stroke-width="6"></path>
+      <path d="M200 182 C160 150 165 115 200 132 C235 115 240 150 200 182Z" fill="url(#g-red)" stroke="#d7192d" stroke-width="3"></path>
+    </svg>
+    <figcaption class="meta border-t-[3px] border-ink p-3">{cap.you}</figcaption>
+  </figure>
+
+  <figure class="panel reveal overflow-hidden bg-[#0b0b0b]" style="--i:0">
+    <HeroArt class="mx-auto block max-h-[28rem] w-auto" title={cap.hero} />
+    <figcaption class="meta border-t-[3px] border-ink bg-raised p-3">{cap.hero}</figcaption>
+  </figure>
+
+  <figure class="panel reveal tone-light flex flex-col items-center justify-between overflow-hidden" style="--i:1">
+    <div class="grid flex-1 place-items-center p-6">
+      <Picture name="cover-17-21" width={238} height={375} alt={cap.cover} class="w-48 border-[3px] border-ink" />
+    </div>
+    <figcaption class="meta w-full border-t-[3px] border-ink bg-raised p-3">{cap.cover}</figcaption>
+  </figure>
+</div>
+
+<p class="meta mt-6 text-tone-60">
+  {id ? 'Ilustrasi 01–05: karya orisinal situs ini, CC BY 4.0.' : 'Illustrations 01–05: original works for this site, CC BY 4.0.'}
+</p>

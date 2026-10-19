@@ -1,0 +1,150 @@
+---
+import { localePath, switchLocalePath, useTranslations, locales, type Locale } from '../i18n';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const path = Astro.url.pathname;
+
+const links = [
+  { href: localePath(lang), label: t('nav.home'), match: (p: string) => p === localePath(lang) },
+  { href: localePath(lang, 'wiki'), label: t('nav.wiki'), match: (p: string) => p.startsWith(localePath(lang, 'wiki')) },
+  { href: localePath(lang, 'blog'), label: t('nav.blog'), match: (p: string) => p.startsWith(localePath(lang, 'blog')) },
+  { href: localePath(lang, 'references'), label: t('nav.references'), match: (p: string) => p.startsWith(localePath(lang, 'references')) },
+];
+---
+
+<header class="sticky top-0 z-40 border-b-[3px] border-ink bg-paper/95 backdrop-blur-sm">
+  <nav class="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6" aria-label="Main">
+    <a href={localePath(lang)} class="group flex items-baseline gap-2 no-underline" aria-label={t('site.name')}>
+      <span class="font-display text-2xl leading-none tracking-tight" lang="ja">恋は盲目</span>
+      <span class="meta hidden text-tone-60 sm:inline">Love is Blind</span>
+    </a>
+
+    <ul id="nav-links" class="nav-links ml-auto hidden items-center gap-1 md:flex">
+      {
+        links.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              class:list={[
+                'meta block px-3 py-2 no-underline hover:bg-ink hover:text-paper',
+                l.match(path) && 'bg-ink text-paper',
+              ]}
+              aria-current={l.match(path) ? 'page' : undefined}
+            >
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="ml-auto flex items-center gap-2 md:ml-2">
+      <div class="flex border-2 border-ink" role="group" aria-label={t('lang.label')}>
+        {
+          locales.map((l) => (
+            <a
+              href={switchLocalePath(path, l)}
+              hreflang={l}
+              lang={l}
+              data-lang-switch={l}
+              class:list={[
+                'meta px-2 py-1 no-underline',
+                l === lang ? 'bg-ink text-paper' : 'hover:bg-tone-10',
+              ]}
+              aria-current={l === lang ? 'true' : undefined}
+              title={l === lang ? undefined : t('lang.switch')}
+            >
+              {l.toUpperCase()}
+            </a>
+          ))
+        }
+      </div>
+
+      <button
+        type="button"
+        id="theme-toggle"
+        class="grid size-9 place-items-center border-2 border-ink hover:bg-tone-10"
+        aria-label={t('theme.toggle')}
+        data-label-light={t('theme.light')}
+        data-label-dark={t('theme.dark')}
+      >
+        <!-- sun: day page -->
+        <svg class="theme-icon-light size-5" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square">
+          <circle cx="12" cy="12" r="4.5" fill="currentColor"></circle>
+          <path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"></path>
+        </svg>
+        <!-- rain: night downpour -->
+        <svg class="theme-icon-dark size-5" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square">
+          <path d="M6 15a4.5 4.5 0 0 1 .6-9A6 6 0 0 1 18 7.5a3.75 3.75 0 0 1 0 7.5Z" fill="currentColor"></path>
+          <path d="M8 18l-1.5 4M12.5 18 11 22M17 18l-1.5 4"></path>
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        id="menu-toggle"
+        class="meta border-2 border-ink px-2 py-1.5 md:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        {t('nav.menu')}
+      </button>
+    </div>
+  </nav>
+
+  <ul id="mobile-menu" class="hidden border-t-2 border-ink md:hidden">
+    {
+      links.map((l) => (
+        <li class="border-b border-ink last:border-b-0">
+          <a
+            href={l.href}
+            class:list={['font-display block px-5 py-3 text-xl no-underline', l.match(path) && 'bg-ink text-paper']}
+            aria-current={l.match(path) ? 'page' : undefined}
+          >
+            {l.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</header>
+
+<style>
+  :global([data-theme='dark']) .theme-icon-light { display: none; }
+  :global([data-theme='light']) .theme-icon-dark { display: none; }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const themeBtn = document.getElementById('theme-toggle') as HTMLButtonElement | null;
+  const syncThemeLabel = () => {
+    if (!themeBtn) return;
+    const dark = root.dataset.theme === 'dark';
+    themeBtn.setAttribute('aria-pressed', String(dark));
+    themeBtn.title = (dark ? themeBtn.dataset.labelDark : themeBtn.dataset.labelLight) ?? '';
+  };
+  syncThemeLabel();
+  themeBtn?.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch {}
+    syncThemeLabel();
+  });
+
+  // Remember an explicit language choice.
+  document.querySelectorAll<HTMLAnchorElement>('[data-lang-switch]').forEach((a) =>
+    a.addEventListener('click', () => {
+      try { localStorage.setItem('lang', a.dataset.langSwitch ?? 'en'); } catch {}
+    }),
+  );
+
+  const menuBtn = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  menuBtn?.addEventListener('click', () => {
+    const open = menuBtn.getAttribute('aria-expanded') === 'true';
+    menuBtn.setAttribute('aria-expanded', String(!open));
+    menu?.classList.toggle('hidden', open);
+  });
+</script>

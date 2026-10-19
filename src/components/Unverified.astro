@@ -1,0 +1,8 @@
+---
+import { useTranslations, type Locale } from '../i18n';
+interface Props { lang: Locale; note?: string }
+const { lang, note } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<span class="unverified" title={note}>{t('unverified')}</span>

@@ -1,0 +1,36 @@
+---
+import { localePath, useTranslations, type Locale } from '../i18n';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="relative mt-24 overflow-hidden bg-[#0b0b0b] text-[#f4f1ea]">
+  <div class="rain pointer-events-none absolute inset-0 text-[#f4f1ea]" aria-hidden="true"></div>
+  <div class="relative mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr]">
+    <div>
+      <p class="font-display text-4xl" lang="ja">恋は盲目</p>
+      <p class="meta mt-2 text-[#b9b4aa]">{t('footer.made')}</p>
+      <p class="mt-6 max-w-xl border-l-4 border-[#ff3b4e] pl-4 text-sm leading-relaxed">
+        {t('footer.disclaimer')}
+      </p>
+    </div>
+    <div class="space-y-6 text-sm">
+      <ul class="meta grid grid-cols-2 gap-2">
+        <li><a class="hover:text-[#ff3b4e]" href={localePath(lang, 'wiki')}>{t('nav.wiki')}</a></li>
+        <li><a class="hover:text-[#ff3b4e]" href={localePath(lang, 'blog')}>{t('nav.blog')}</a></li>
+        <li><a class="hover:text-[#ff3b4e]" href={localePath(lang, 'references')}>{t('nav.references')}</a></li>
+        <li><a class="hover:text-[#ff3b4e]" href={localePath(lang, 'wiki/gallery')}>{lang === 'id' ? 'Galeri' : 'Gallery'}</a></li>
+      </ul>
+      <p>
+        {t('footer.support')}{' '}
+        <a class="underline hover:text-[#ff3b4e]" href="https://www.viz.com/read/manga/tatsuki-fujimoto-before-chainsaw-man/product/7330" rel="noopener" target="_blank">VIZ Media</a>
+        {' · '}
+        <a class="underline hover:text-[#ff3b4e]" href="https://www.shueisha.co.jp/" rel="noopener" target="_blank">Shueisha</a>
+      </p>
+      <p class="meta text-[#b9b4aa]">© {year} fan project · non-commercial</p>
+    </div>
+  </div>
+</footer>

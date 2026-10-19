@@ -1,0 +1,11 @@
+---
+interface Props { cite?: string; shout?: boolean; class?: string }
+const { cite, shout = false, class: className } = Astro.props;
+---
+
+<figure class:list={['my-10 max-w-xl', className]}>
+  <blockquote class:list={['bubble font-serif text-xl italic leading-snug', shout && 'bubble-shout px-10 py-8']}>
+    <slot />
+  </blockquote>
+  {cite && <figcaption class="meta mt-8 pl-4 text-tone-60">— {cite}</figcaption>}
+</figure>

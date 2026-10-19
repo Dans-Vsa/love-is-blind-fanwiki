@@ -1,0 +1,104 @@
+---
+// Client-side wiki + blog search over a JSON index generated at build time.
+import { localePath, useTranslations, withBase, type Locale } from '../i18n';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div class="search" data-index={withBase(`/${lang}/search-index.json`)} data-empty={t('wiki.search.empty')} data-results={t('wiki.search.results')}>
+  <label for="wiki-search" class="meta mb-2 block">{t('wiki.search')}</label>
+  <div class="flex border-[3px] border-ink bg-raised shadow-[4px_4px_0_var(--ink)] focus-within:outline-3 focus-within:outline-offset-2 focus-within:outline-accent">
+    <svg class="m-3 size-5 shrink-0" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square">
+      <circle cx="10" cy="10" r="7"></circle><path d="M15.5 15.5 22 22"></path>
+    </svg>
+    <input
+      id="wiki-search"
+      type="search"
+      autocomplete="off"
+      placeholder={t('wiki.search.placeholder')}
+      class="w-full bg-transparent py-3 pr-3 text-lg outline-none placeholder:text-tone-60"
+      aria-controls="wiki-search-results"
+      aria-describedby="wiki-search-status"
+    />
+  </div>
+  <p id="wiki-search-status" class="meta mt-2 min-h-5 text-tone-60" role="status" aria-live="polite"></p>
+  <ol id="wiki-search-results" class="mt-2 space-y-2"></ol>
+  <noscript><p class="meta">JavaScript is needed for search. <a href={localePath(lang, 'wiki')}>Browse all panels</a>.</p></noscript>
+</div>
+
+<script>
+  type Doc = { title: string; url: string; section: string; text: string };
+
+  const root = document.querySelector<HTMLElement>('.search');
+  const input = root?.querySelector<HTMLInputElement>('input');
+  const list = root?.querySelector<HTMLOListElement>('#wiki-search-results');
+  const status = root?.querySelector<HTMLElement>('#wiki-search-status');
+  let docs: Doc[] | null = null;
+
+  const norm = (s: string) => s.toLowerCase().normalize('NFKD').replace(/\p{Diacritic}/gu, '');
+
+  async function load() {
+    if (docs || !root) return docs;
+    const res = await fetch(root.dataset.index!);
+    docs = (await res.json()) as Doc[];
+    return docs;
+  }
+
+  function snippet(text: string, term: string) {
+    const i = norm(text).indexOf(term);
+    if (i < 0) return text.slice(0, 140) + '…';
+    const start = Math.max(0, i - 60);
+    return (start ? '…' : '') + text.slice(start, i + 90) + '…';
+  }
+
+  function render(q: string, all: Doc[]) {
+    if (!list || !status || !root) return;
+    list.replaceChildren();
+    const terms = norm(q).split(/\s+/).filter((w) => w.length > 1);
+    if (!terms.length) { status.textContent = ''; return; }
+    const scored = all
+      .map((d) => {
+        const title = norm(d.title);
+        const text = norm(d.text);
+        let score = 0;
+        for (const term of terms) {
+          if (title.includes(term)) score += 10;
+          const hits = text.split(term).length - 1;
+          if (!hits) return { d, score: 0 };
+          score += Math.min(hits, 8);
+        }
+        return { d, score };
+      })
+      .filter((r) => r.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 8);
+
+    status.textContent = scored.length ? `${scored.length} ${root.dataset.results}` : root.dataset.empty!;
+    for (const { d } of scored) {
+      const li = document.createElement('li');
+      li.className = 'border-[3px] border-ink bg-raised p-3';
+      const a = document.createElement('a');
+      a.href = d.url;
+      a.className = 'font-display text-lg';
+      a.textContent = d.title;
+      const meta = document.createElement('span');
+      meta.className = 'meta ml-2 text-tone-60';
+      meta.textContent = d.section;
+      const p = document.createElement('p');
+      p.className = 'mt-1 text-sm leading-snug';
+      // Spoiler blocks are stripped from the index at build time, so snippets are safe.
+      p.textContent = snippet(d.text, terms[0]);
+      li.append(a, meta, p);
+      list.append(li);
+    }
+  }
+
+  let timer = 0;
+  input?.addEventListener('input', () => {
+    clearTimeout(timer);
+    timer = window.setTimeout(async () => render(input.value, (await load()) ?? []), 120);
+  });
+  input?.addEventListener('focus', () => void load(), { once: true });
+</script>
