@@ -26,3 +26,4 @@ pnpm-debug.log*
 # local tooling
 .claude/
 .playwright-cli/
+.omc/
