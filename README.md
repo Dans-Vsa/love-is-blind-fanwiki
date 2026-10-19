@@ -19,6 +19,13 @@ The design takes its cue from the manga itself: black ink on newsprint, screento
 - **Spoiler protection**: `<Spoiler>` blocks are blurred and `inert` until "Show spoiler / Tampilkan spoiler" is pressed. Spoilers are stripped from the search index too.
 - **EN / ID i18n**: `/en/…` and `/id/…` URLs. The navbar toggle keeps you on the same page and saves your choice in `localStorage`. `/` picks saved choice → browser language → English. All UI, wiki and blog content exists in both languages.
 - **Client-side search** across wiki and blog (JSON index generated at build time).
+- **Watch the anime**: the official special PV (avex pictures) and the Prime Video trailer in a tabbed player. A thumbnail stands in for the player, and YouTube (nocookie) only loads after you press play.
+- **Official character art**: Ibuki and Yuri from the anime, printed in "ink" (greyscale + contrast) until you hover, tap, focus or flip the Ink/Colour switch. Panels tilt toward the pointer.
+- **Premise reader**: a spoiler-free, swipeable panel-by-panel walk through the setup (scroll-snap, buttons, arrow keys).
+- **Rank it like Ibuki**: a mini game. Drag or use ▲/▼ to rank four priorities, then check whether you are love-blind enough (heart burst included).
+- **Live downpour**: a canvas rain layer over the hero art whose wind follows the pointer. It pauses off-screen and can be toggled.
+- **Page transitions**: cross-document View Transitions wipe each new page in like a turned panel (no JS).
+- **Part of the Fujimoto Archive**: links to the [Fujimoto Archive](https://dans-vsa.github.io/fujimoto-archive/), the [Before Chainsaw Man](https://dans-vsa.github.io/before-chainsaw-man-fanblog/) semi-wiki and the other *17-21* one-shots.
 - **Sticky TOC** with active-section highlight on every article.
 - **Dark / light mode** ("day page" / "night downpour"), stored in `localStorage`, defaults to `prefers-color-scheme`, no flash.
 - **Panel-reveal animation** using CSS scroll-driven animations. It degrades to static where unsupported, and all motion is disabled under `prefers-reduced-motion`.
@@ -60,7 +67,8 @@ npm run verify     # astro check + eslint + build + internal link/asset check
 ├── scripts/
 │   ├── optimize-images.mjs   # convert/resize images to AVIF + WebP
 │   ├── generate-icons.mjs    # favicon.ico, touch icon, OG image from SVG
-│   ├── build-fonts.mjs       # trims @font-face to used subsets → src/styles/fonts.css
+│   ├── build-fonts.mjs       # Latin subsets + a custom Japanese subset of Dela Gothic → src/styles/fonts.css
+│   ├── optimize-official.mjs # official anime art / PV thumbnails → AVIF + WebP
 │   └── check-links.mjs       # verifies every internal href/src in dist/
 └── src/
     ├── content/
@@ -112,7 +120,13 @@ Hidden until the reader opts in.
 
 Same idea in `src/content/wiki/{en,id}/`. Frontmatter: `title`, `description`, `order` (card position), `kanji` (decorative glyph), `spoilers`, `sources` (ids from `src/data/sources.ts`, listed at the bottom of the page) and `updated`. Mark doubtful claims with `<Unverified lang="en" />`.
 
-If you add new Japanese characters to display text, run `npm run fonts` so the display font includes them.
+If you add new Japanese characters to display text, regenerate the display-font subset:
+
+```bash
+FONTTOOLS_PYTHON=/path/to/python DELA_TTF=/path/to/DelaGothicOne-Regular.ttf npm run fonts
+```
+
+It needs Python with `fonttools` + `brotli`, and the TTF from google/fonts. Without the env vars, `npm run fonts` only rewrites the CSS.
 
 ### A new language
 
