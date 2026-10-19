@@ -1,0 +1,161 @@
+---
+// Spoiler-free "manga reader" for the premise. Built on CSS scroll-snap, so it
+// swipes natively and still works (as a scrollable strip) without JavaScript.
+// Artwork is original SVG, not traced from the manga.
+import Sfx from './Sfx.astro';
+import Silhouette from './Silhouette.astro';
+import { localePath, useTranslations, type Locale } from '../i18n';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const id = lang === 'id';
+
+const panels = [
+  { art: 'resolve', sfx: 'ドン', text: id ? 'Sehari sebelum kelulusan. Ketua OSIS Ibuki sudah bulat tekad: hari ini ia akan menyatakan cinta.' : 'The day before graduation. Student council president Ibuki has made up his mind: today he confesses.' },
+  { art: 'walk', sfx: 'ザアアア', text: id ? 'Ia mengajak Yuri, wakil ketuanya, pulang bersama. Hujan turun deras. Setelah ini ia akan kuliah ke luar negeri.' : 'He asks Yuri, his vice-president, to walk home with him. It is pouring. After this, he leaves to study abroad.' },
+  { art: 'ceremony', sfx: '!', text: id ? 'Gangguan #1: urusan upacara kelulusan butuh sang ketua. Prioritas paling buncit.' : 'Interruption #1: the graduation ceremony needs its president. The least of his priorities.' },
+  { art: 'robber', sfx: '!!', text: id ? 'Gangguan #2: seorang perampok, di tengah hujan. Masih prioritas paling buncit.' : 'Interruption #2: a robber, in the rain. Still the least of his priorities.' },
+  { art: 'alien', sfx: '!!!', text: id ? 'Gangguan #3: alien mengumumkan Bumi akan dihancurkan. Tebak di urutan berapa itu bagi Ibuki.' : 'Interruption #3: an alien announces Earth will be destroyed. Guess where that ranks for Ibuki.' },
+  { art: 'heart', sfx: 'ドキ', text: id ? 'Apakah pengakuannya sampai? Jawabannya ada di balik tombol spoiler.' : 'Does the confession get through? The answer is behind a spoiler toggle.', cta: true },
+];
+---
+
+<section class="reader" data-reader aria-roledescription="carousel" aria-labelledby="reader-title">
+  <div class="mb-5 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h2 id="reader-title" class="font-display text-3xl sm:text-4xl">{t('reader.title')}</h2>
+      <p class="mt-2 max-w-xl text-tone-60">{t('reader.lede')}</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button type="button" class="btn btn-ghost !px-3" data-prev aria-label={t('reader.prev')}>←</button>
+      <p class="meta min-w-16 text-center" aria-live="polite"><span data-current>1</span> {t('reader.of')} {panels.length}</p>
+      <button type="button" class="btn btn-primary !px-3" data-next aria-label={t('reader.next')}>→</button>
+    </div>
+  </div>
+
+  <ol class="reader-track flex snap-x snap-mandatory gap-[var(--gutter)] overflow-x-auto pb-4" tabindex="0" aria-label={t('reader.title')}>
+    {
+      panels.map((p, i) => (
+        <li
+          class="panel relative flex w-[86%] shrink-0 snap-center flex-col overflow-hidden sm:w-[62%] lg:w-[44%]"
+          aria-roledescription="slide"
+          aria-label={`${i + 1} / ${panels.length}`}
+          data-slide
+        >
+          <div class:list={['relative h-56 border-b-[3px] border-ink sm:h-64', p.art === 'walk' || p.art === 'alien' ? 'bg-[#0b0b0b] text-[#f4f1ea]' : 'tone-light']} aria-hidden="true">
+            {p.art === 'walk' && <div class="rain absolute inset-0 animate-rain text-[#f4f1ea]" />}
+            {p.art === 'resolve' && (
+              <div class="absolute inset-0 grid place-items-center">
+                <div class="absolute inset-0" style="background: repeating-conic-gradient(from 0deg at 50% 60%, var(--ink) 0deg 1.2deg, transparent 1.2deg 9deg); opacity:.18" />
+                <Silhouette id="ibuki" class="relative h-44 w-auto" />
+              </div>
+            )}
+            {p.art === 'walk' && (
+              <div class="absolute inset-x-0 bottom-0 flex items-end justify-center gap-2 pb-4">
+                <Silhouette id="ibuki" class="h-36 w-auto" />
+                <Silhouette id="yuri" class="h-32 w-auto" />
+              </div>
+            )}
+            {p.art === 'ceremony' && (
+              <svg viewBox="0 0 200 140" class="absolute inset-0 m-auto h-44">
+                <circle cx="100" cy="62" r="40" fill="currentColor" />
+                <circle cx="100" cy="62" r="20" fill="var(--paper)" />
+                <path d="M84 96 L72 138 L92 126 L98 140 L106 98Z" fill="currentColor" />
+              </svg>
+            )}
+            {p.art === 'robber' && (
+              <div class="absolute inset-0 grid place-items-center">
+                <div class="rain absolute inset-0 text-ink" />
+                <Silhouette id="robber" class="relative h-44 w-auto" />
+              </div>
+            )}
+            {p.art === 'alien' && (
+              <svg viewBox="0 0 200 140" class="absolute inset-0 m-auto h-48">
+                <path d="M70 52 L40 140 L160 140 L130 52Z" fill="currentColor" opacity=".18" />
+                <ellipse cx="100" cy="48" rx="62" ry="15" fill="#0b0b0b" stroke="currentColor" stroke-width="4" />
+                <path d="M70 44 Q100 4 130 44Z" fill="#0b0b0b" stroke="currentColor" stroke-width="4" />
+                <circle cx="62" cy="52" r="4" fill="currentColor" /><circle cx="88" cy="56" r="4" fill="currentColor" />
+                <circle cx="112" cy="56" r="4" fill="currentColor" /><circle cx="138" cy="52" r="4" fill="currentColor" />
+              </svg>
+            )}
+            {p.art === 'heart' && (
+              <svg viewBox="0 0 200 140" class="animate-heart absolute inset-0 m-auto h-40">
+                <path d="M100 128 C40 90 22 62 22 40 C22 20 38 8 56 8 C76 8 92 20 100 36 C108 20 124 8 144 8 C162 8 178 20 178 40 C178 62 160 90 100 128Z" fill="var(--accent)" stroke="var(--ink)" stroke-width="5" />
+                <text x="100" y="80" text-anchor="middle" font-family="Dela Gothic One" font-size="56" fill="var(--paper)">?</text>
+              </svg>
+            )}
+            <Sfx text={p.sfx} class="absolute top-3 left-4 text-5xl" rotate={-8} accent={p.sfx.startsWith('!') || p.art === 'heart'} />
+            <span class="panel-caption absolute top-3 right-3">{String(i + 1).padStart(2, '0')}</span>
+          </div>
+          <div class="flex flex-1 flex-col justify-between gap-4 p-5">
+            <p class="text-lg leading-snug">{p.text}</p>
+            {p.cta && (
+              <a class="btn btn-primary w-fit" href={localePath(lang, 'wiki/synopsis') + (id ? '#ringkasan-alur-lengkap' : '#full-plot-summary')}>
+                {t('nav.wiki')}: {id ? 'Sinopsis' : 'Synopsis'} →
+              </a>
+            )}
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+  <div class="mt-2 flex justify-center gap-2" aria-hidden="true">
+    {panels.map((_, i) => <span class:list={['reader-dot size-2.5 border-2 border-ink', i === 0 && 'bg-ink']} />)}
+  </div>
+</section>
+
+<style>
+  .reader-track { scrollbar-width: thin; scroll-padding-inline: 7%; }
+  .reader-track:focus-visible { outline-offset: 6px; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-reader]').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('.reader-track')!;
+    const slides = [...root.querySelectorAll<HTMLElement>('[data-slide]')];
+    const dots = [...root.querySelectorAll<HTMLElement>('.reader-dot')];
+    const current = root.querySelector<HTMLElement>('[data-current]')!;
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
+    let index = 0;
+
+    const nearest = () => {
+      const mid = track.scrollLeft + track.clientWidth / 2;
+      let best = 0;
+      let bestDist = Infinity;
+      slides.forEach((s, i) => {
+        const d = Math.abs(s.offsetLeft + s.offsetWidth / 2 - mid);
+        if (d < bestDist) { bestDist = d; best = i; }
+      });
+      return best;
+    };
+    const update = () => {
+      index = nearest();
+      current.textContent = String(index + 1);
+      dots.forEach((d, i) => d.classList.toggle('bg-ink', i === index));
+      prev.disabled = index === 0;
+      next.disabled = index === slides.length - 1;
+      prev.classList.toggle('opacity-40', prev.disabled);
+      next.classList.toggle('opacity-40', next.disabled);
+    };
+    const go = (i: number) => {
+      const s = slides[Math.max(0, Math.min(slides.length - 1, i))];
+      const behavior = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+      track.scrollTo({ left: s.offsetLeft - (track.clientWidth - s.offsetWidth) / 2, behavior });
+    };
+
+    prev.addEventListener('click', () => go(index - 1));
+    next.addEventListener('click', () => go(index + 1));
+    track.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(index + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(index - 1); }
+    });
+    let raf = 0;
+    track.addEventListener('scroll', () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(update);
+    }, { passive: true });
+    update();
+  });
+</script>

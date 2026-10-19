@@ -227,6 +227,33 @@
 
 }
 
+/* Ink treatment for official colour art: printed in sumi ink until hovered,
+   focused, tapped, or switched to colour (data-colour="on" on an ancestor). */
+.ink-figure img {
+  filter: grayscale(1) contrast(1.45) brightness(1.04);
+  transition: filter 0.5s ease;
+}
+.ink-figure:hover img,
+.ink-figure:focus-within img,
+.ink-figure[data-coloured] img,
+[data-colour="on"] .ink-figure img { filter: none; }
+
+/* Pointer tilt (set by JS through --rx / --ry) */
+.tilt {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.2s ease-out;
+  will-change: transform;
+}
+
+/* Cross-document page transitions: the next page wipes in like a turned panel. */
+@view-transition { navigation: auto; }
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) { animation: vt-out 0.28s cubic-bezier(0.4, 0, 1, 1) both; }
+  ::view-transition-new(root) { animation: vt-in 0.42s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+}
+@keyframes vt-out { to { opacity: 0; transform: translateX(-3%); } }
+@keyframes vt-in { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0 0 0 0); } }
+
 /* Panel reveal: panels wipe in from the left as they scroll into view.
    Pure CSS scroll-driven animation; browsers without support (or with
    reduced motion) simply show the panels. */
