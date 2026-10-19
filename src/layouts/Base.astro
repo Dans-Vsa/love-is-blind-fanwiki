@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import displayFont from '@fontsource/dela-gothic-one/files/dela-gothic-one-latin-400-normal.woff2?url';
+import bodyFont from '@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-normal.woff2?url';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { locales, switchLocalePath, useTranslations, withBase, type Locale } from '../i18n';
@@ -11,9 +13,10 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   publishedTime?: Date;
+  noindex?: boolean;
 }
 
-const { lang, title, description, image = '/assets/og/og-default.png', type = 'website', publishedTime } = Astro.props;
+const { lang, title, description, image = '/assets/og/og-default.png', type = 'website', publishedTime, noindex = false } = Astro.props;
 const t = useTranslations(lang);
 const fullTitle = title ? `${title} · ${t('site.name')}` : `${t('site.name')} | 恋は盲目`;
 const desc = description ?? t('site.description');
@@ -28,6 +31,7 @@ const ogImage = new URL(withBase(image), Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={desc} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
     {
       locales.map((l) => (
@@ -39,6 +43,8 @@ const ogImage = new URL(withBase(image), Astro.site);
     <link rel="icon" href={withBase('/favicon.ico')} sizes="32x32" />
     <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
     <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={bodyFont} as="font" type="font/woff2" crossorigin />
     <meta name="theme-color" content="#0b0b0b" />
     <meta name="generator" content={Astro.generator} />
 
@@ -65,13 +71,13 @@ const ogImage = new URL(withBase(image), Astro.site);
         const dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
         document.documentElement.dataset.theme = dark ? 'dark' : 'light';
         localStorage.setItem('lang', lang);
-      } catch (e) {}
+      } catch {}
     </script>
   </head>
   <body class="flex min-h-dvh flex-col">
     <a
       href="#main"
-      class="meta sr-only z-50 bg-accent px-4 py-2 text-white focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
+      class="meta sr-only z-50 bg-accent px-4 py-2 text-accent-ink focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
       >{t('nav.skip')}</a
     >
     <Nav lang={lang} />

@@ -31,7 +31,10 @@ export function localePath(lang: Locale, path = ''): string {
 /** Swap the locale segment of the current pathname. */
 export function switchLocalePath(pathname: string, to: Locale): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-  const rest = pathname.slice(base.length).replace(/^\/(en|id)(?=\/|$)/, '');
+  const path = pathname.slice(base.length);
+  // Pages outside a locale (e.g. 404) fall back to that locale's home page.
+  if (!/^\/(en|id)(\/|$)/.test(path)) return withBase(`/${to}/`);
+  const rest = path.replace(/^\/(en|id)(?=\/|$)/, '');
   return withBase(`/${to}${rest || '/'}`);
 }
 
