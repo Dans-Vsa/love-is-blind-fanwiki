@@ -1,0 +1,35 @@
+---
+title: Karakter
+description: Infobox wiki untuk Ibuki, Yuri Kōnosu, dan semua orang (serta makhluk) yang mengganggu mereka.
+order: 2
+kanji: 人
+spoilers: false
+sources: [wiki-before-csm, jumpsq-crown-9, jumpsq-tweet-2016, ashley-manning, tvtropes-fujimoto]
+updated: 2026-10-20
+---
+import Infobox from '../../../components/Infobox.astro';
+import { characters } from '../../../data/characters';
+
+Pemerannya sangat sedikit: dua tokoh utama dan serangkaian gangguan yang makin besar. Nama Jepang dan pengisi suara diambil dari anime *Tatsuki Fujimoto 17-26* (episode 3). Tokoh tambahan anime yang tidak dikonfirmasi sumber manga ditandai *belum terverifikasi*.
+
+## Tokoh utama
+
+<div class="grid gap-[var(--gutter)]">
+  {characters.slice(0, 2).map((c, i) => <Infobox lang="id" character={c} index={i} />)}
+</div>
+
+## Para pengganggu
+
+<div class="grid gap-[var(--gutter)]">
+  {characters.slice(2).map((c, i) => <Infobox lang="id" character={c} index={i} />)}
+</div>
+
+## Peta relasi
+
+| Dari | Ke | Relasi |
+| --- | --- | --- |
+| Ibuki | Yuri | Senpai, ketua OSIS; jatuh cinta kepadanya |
+| Yuri | Ibuki | Kōhai, wakil ketua; "Osu!" |
+| Perampok, Alien | Ibuki | Penghalang antara Ibuki dan pengakuan cintanya |
+
+Pengisi suara versi dub Inggris tercantum di Wikipedia. Nama Jepang (伊吹, 鴻巣ユリ) ditulis sesuai kredit anime.
