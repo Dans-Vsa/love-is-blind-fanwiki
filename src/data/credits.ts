@@ -19,6 +19,21 @@ export const assetCredits: AssetCredit[] = [
     note: 'Not free-licensed. Will be removed on request from the rights holder.',
   },
   {
+    asset: 'Official anime art: Ibuki and Yuri character art, episode key visual',
+    file: 'public/assets/img/official/{ibuki,yuri,key-visual}.{webp,avif}',
+    author: '© Tatsuki Fujimoto / Shueisha · Tatsuki Fujimoto 17-26 Production Committee',
+    source: 'https://fujimototatsuki17-26.com/story/love/',
+    license: 'Copyrighted promotional art; downscaled and used under fair use for commentary on a non-commercial fan site',
+    note: 'Not free-licensed. Shown greyscale by default with colour on interaction. Will be removed on request.',
+  },
+  {
+    asset: 'Thumbnails of the official PV and trailer (click-to-play facades)',
+    file: 'public/assets/img/official/pv-*.{webp,avif}',
+    author: '© avex pictures / Prime Video / Tatsuki Fujimoto 17-26 Production Committee',
+    source: 'https://www.youtube.com/watch?v=bnnbCdR6sIE',
+    license: 'Copyrighted; the videos are embedded from the official YouTube channels (youtube-nocookie), not re-hosted',
+  },
+  {
     asset: 'Photo: Tatsuki Fujimoto’s manga volumes',
     file: 'public/assets/img/fujimoto-volumes.{webp,avif}',
     author: 'KanaArima (Wikimedia Commons)',
