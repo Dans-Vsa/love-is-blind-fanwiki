@@ -121,6 +121,10 @@ const panels = [
     let index = 0;
 
     const nearest = () => {
+      // At either end of the track the first/last panel is the current one,
+      // even though it isn't centred.
+      if (track.scrollLeft <= 4) return 0;
+      if (track.scrollLeft >= track.scrollWidth - track.clientWidth - 4) return slides.length - 1;
       const mid = track.scrollLeft + track.clientWidth / 2;
       let best = 0;
       let bestDist = Infinity;
