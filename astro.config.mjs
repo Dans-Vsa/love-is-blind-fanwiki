@@ -1,15 +1,24 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-
 import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
-// https://astro.build/config
-export default defineConfig({
-  vite: {
-    plugins: [tailwindcss()]
-  },
+// Set SITE (e.g. https://<user>.github.io) and BASE (e.g. /love-is-blind) for GitHub Pages.
+const site = process.env.SITE ?? 'https://love-is-blind-fanwiki.vercel.app';
+const base = process.env.BASE ?? '/';
 
-  integrations: [mdx(), sitemap()]
+export default defineConfig({
+  site,
+  base,
+  trailingSlash: 'always',
+  vite: { plugins: [tailwindcss()] },
+  integrations: [
+    mdx(),
+    sitemap({
+      i18n: { defaultLocale: 'en', locales: { en: 'en-US', id: 'id-ID' } },
+      // The root page only redirects to /en/ or /id/, so keep it out of the sitemap.
+      filter: (page) => new URL(page).pathname !== (base.endsWith('/') ? base : `${base}/`),
+    }),
+  ],
 });
