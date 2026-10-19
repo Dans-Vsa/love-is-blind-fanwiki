@@ -12,6 +12,8 @@ export interface Character {
   /** Plain-language relations; spoiler-free. */
   relations: L;
   va?: { ja: string; en?: string };
+  /** Official anime character art in public/assets/img (AVIF + WebP pair). */
+  image?: { name: string; width: number; height: number };
   /** Source ids from src/data/sources.ts */
   sources: string[];
   /** Short fields that could not be confirmed in two sources. */
@@ -31,6 +33,7 @@ export const characters: Character[] = [
     },
     relations: { en: 'Senpai to Yuri; in love with her.', id: 'Senpai Yuri; jatuh cinta kepadanya.' },
     va: { ja: 'Shun Horie (堀江瞬)', en: 'Nick Thurston' },
+    image: { name: 'official/ibuki', width: 241, height: 760 },
     sources: ['wiki-before-csm', 'jumpsq-crown-9', 'tvtropes-fujimoto'],
   },
   {
@@ -45,6 +48,7 @@ export const characters: Character[] = [
     },
     relations: { en: 'Kōhai and right hand of Ibuki.', id: 'Kōhai sekaligus tangan kanan Ibuki.' },
     va: { ja: 'Shion Wakayama (若山詩音)', en: 'Abby Espiritu' },
+    image: { name: 'official/yuri', width: 195, height: 760 },
     sources: ['wiki-before-csm', 'jumpsq-tweet-2016', 'jumpsq-crown-9'],
   },
   {

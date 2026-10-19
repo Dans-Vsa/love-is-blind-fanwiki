@@ -3,6 +3,7 @@ import type { Character } from '../data/characters';
 import { useTranslations, type Locale } from '../i18n';
 import Unverified from './Unverified.astro';
 import Silhouette from './Silhouette.astro';
+import Picture from './Picture.astro';
 
 interface Props { lang: Locale; character: Character; index?: number }
 const { lang, character: c, index = 0 } = Astro.props;
@@ -16,7 +17,22 @@ const t = useTranslations(lang);
   </header>
   <div class="grid sm:grid-cols-[9rem_1fr]">
     <div class="tone-light grid place-items-center border-b-[3px] border-ink p-3 sm:border-r-[3px] sm:border-b-0">
-      <Silhouette id={c.id} class="h-32 w-auto" />
+      {
+        c.image ? (
+          <figure class="ink-figure m-0" tabindex="0">
+            <Picture
+              name={c.image.name}
+              width={c.image.width}
+              height={c.image.height}
+              alt={lang === 'id' ? `${c.name}, artwork karakter resmi dari anime` : `${c.name}, official character art from the anime`}
+              class="h-56 w-auto"
+            />
+            <figcaption class="sr-only">© Tatsuki Fujimoto / Shueisha · Tatsuki Fujimoto 17-26</figcaption>
+          </figure>
+        ) : (
+          <Silhouette id={c.id} class="h-32 w-auto" />
+        )
+      }
     </div>
     <div class="p-4">
       <dl class="grid grid-cols-[auto_1fr] text-sm">

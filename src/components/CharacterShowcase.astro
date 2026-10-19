@@ -1,0 +1,85 @@
+---
+// Home-page showcase of the two leads using the official anime art, shown in
+// "ink" until the reader hovers/taps a figure or flips the colour switch.
+import Picture from './Picture.astro';
+import Sfx from './Sfx.astro';
+import { characters } from '../data/characters';
+import { localePath, useTranslations, type Locale } from '../i18n';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const leads = characters.filter((c) => c.image);
+---
+
+<section class="showcase" data-colour="off" aria-labelledby="showcase-title">
+  <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h2 id="showcase-title" class="font-display text-3xl sm:text-4xl">{t('chars.title')}</h2>
+      <p class="mt-2 max-w-xl text-tone-60">{t('chars.lede')}</p>
+    </div>
+    <button type="button" class="colour-switch meta flex items-center gap-3" aria-pressed="false" data-colour-switch>
+      <span>{t('chars.ink')}</span>
+      <span class="relative h-7 w-14 border-[3px] border-ink bg-raised" aria-hidden="true">
+        <span class="switch-knob absolute top-0.5 left-0.5 size-4 bg-ink transition-all duration-200"></span>
+      </span>
+      <span>{t('chars.colour')}</span>
+      <span class="sr-only">{t('chars.toggle')}</span>
+    </button>
+  </div>
+
+  <div class="grid gap-[var(--gutter)] sm:grid-cols-2">
+    {
+      leads.map((c, i) => (
+        <a
+          href={localePath(lang, `wiki/characters`) + `#${c.id}`}
+          class="panel panel-link reveal group relative flex min-h-[26rem] items-end overflow-hidden no-underline"
+          style={`--i:${i}`}
+          data-tilt
+        >
+          <div class:list={['absolute inset-0', i === 0 ? 'rain text-ink' : 'tone-light']} aria-hidden="true" />
+          <span
+            aria-hidden="true"
+            lang="ja"
+            class="pointer-events-none absolute top-2 right-3 font-display text-[7rem] leading-none opacity-10 [writing-mode:vertical-rl] sm:text-[9rem]"
+          >
+            {c.jp}
+          </span>
+          <div class="ink-figure relative z-10 mx-auto flex h-[24rem] items-end pt-6 transition-transform duration-300 group-hover:-translate-y-2">
+            <Picture
+              name={c.image!.name}
+              width={c.image!.width}
+              height={c.image!.height}
+              alt={lang === 'id' ? `${c.name}, artwork karakter resmi dari anime` : `${c.name}, official character art from the anime`}
+              class="h-[24rem] w-auto drop-shadow-[6px_6px_0_var(--ink)]"
+            />
+          </div>
+          <div class="absolute bottom-0 left-0 z-20 m-4 border-[3px] border-ink bg-raised px-4 py-2">
+            <p class="font-display text-2xl leading-none">{c.name}</p>
+            <p class="meta mt-1 text-tone-60">{c.position[lang]}</p>
+          </div>
+          <Sfx text={i === 0 ? 'ドキ' : 'オス'} class="absolute top-6 left-4 z-20 text-5xl" rotate={i === 0 ? -10 : 8} accent={i === 0} />
+        </a>
+      ))
+    }
+  </div>
+  <p class="meta mt-4 flex flex-wrap justify-between gap-2 text-tone-60">
+    <span>{t('chars.credit')}</span>
+    <a href={localePath(lang, 'wiki/characters')} class="underline decoration-accent decoration-2">{t('chars.more')} →</a>
+  </p>
+</section>
+
+<style>
+  .showcase[data-colour='on'] .switch-knob { left: calc(100% - 1.125rem); background: var(--accent); }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.showcase').forEach((root) => {
+    const btn = root.querySelector<HTMLButtonElement>('[data-colour-switch]');
+    btn?.addEventListener('click', () => {
+      const on = root.dataset.colour !== 'on';
+      root.dataset.colour = on ? 'on' : 'off';
+      btn.setAttribute('aria-pressed', String(on));
+    });
+  });
+</script>
