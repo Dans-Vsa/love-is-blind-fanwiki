@@ -1,5 +1,6 @@
 ---
 import { localePath, useTranslations, type Locale } from '../i18n';
+import { ARCHIVE, bcmUrl } from '../data/universe';
 
 interface Props { lang: Locale }
 const { lang } = Astro.props;
@@ -23,6 +24,8 @@ const year = new Date().getFullYear();
         <li><a class="hover:text-[#ff3b4e]" href={localePath(lang, 'blog')}>{t('nav.blog')}</a></li>
         <li><a class="hover:text-[#ff3b4e]" href={localePath(lang, 'references')}>{t('nav.references')}</a></li>
         <li><a class="hover:text-[#ff3b4e]" href={localePath(lang, 'wiki/gallery')}>{lang === 'id' ? 'Galeri' : 'Gallery'}</a></li>
+        <li><a class="hover:text-[#ff3b4e]" href={ARCHIVE}>Fujimoto Archive ↗</a></li>
+        <li><a class="hover:text-[#ff3b4e]" href={bcmUrl(lang, 'love')}>Before Chainsaw Man ↗</a></li>
       </ul>
       <p>
         {t('footer.support')}{' '}

@@ -1,0 +1,66 @@
+---
+import Sfx from './Sfx.astro';
+import { ARCHIVE, ARCHIVE_ENTRY, bcmUrl, collection } from '../data/universe';
+import { useTranslations, type Locale } from '../i18n';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section aria-labelledby="universe-title">
+  <h2 id="universe-title" class="flex items-center gap-4 font-display text-3xl sm:text-4xl">
+    {t('universe.title')}
+    <span class="tone h-4 flex-1" aria-hidden="true"></span>
+  </h2>
+  <p class="mt-2 mb-6 max-w-2xl text-tone-60">{t('universe.lede')}</p>
+
+  <div class="grid gap-[var(--gutter)] md:grid-cols-2">
+    <a href={ARCHIVE} class="panel panel-link reveal group relative block overflow-hidden bg-[#0b0b0b] p-6 text-[#f4f1ea] no-underline" data-tilt>
+      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-end gap-1 pr-5 pb-0 opacity-70" aria-hidden="true">
+        {['#914d33', '#c7362b', '#e8d8a8', '#3d5a80', '#9ab87b', '#f4f1ea', '#5f5b54'].map((c, i) => (
+          <span class="block w-5 border-2 border-[#0b0b0b] transition-transform duration-300 group-hover:-translate-y-2" style={`height:${7 + ((i * 37) % 5)}rem;background:${c};transition-delay:${i * 30}ms`} />
+        ))}
+      </div>
+      <p class="meta text-[#b9b4aa]">dans-vsa.github.io/fujimoto-archive</p>
+      <p class="mt-2 font-display text-3xl">{t('universe.archive')} ↗</p>
+      <p class="mt-2 max-w-xs">{t('universe.archive.desc')}</p>
+    </a>
+
+    <a href={bcmUrl(lang, 'love')} class="panel panel-link reveal group relative block overflow-hidden p-6 no-underline" style="--i:1" data-tilt>
+      <div class="tone-light absolute inset-0" aria-hidden="true"></div>
+      <Sfx text="17-21" class="absolute right-4 bottom-0 text-7xl" rotate={-6} />
+      <p class="meta relative text-tone-60">dans-vsa.github.io/before-chainsaw-man-fanblog</p>
+      <p class="relative mt-2 font-display text-3xl">{t('universe.bcm')} ↗</p>
+      <p class="relative mt-2 max-w-sm">{t('universe.bcm.desc')}</p>
+    </a>
+  </div>
+
+  <div class="panel mt-[var(--gutter)] p-5">
+    <p class="panel-caption">{t('universe.collection')}</p>
+    <ol class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        collection(lang).map((s) => (
+          <li>
+            {s.href ? (
+              <a href={s.href} class="group flex h-full flex-col border-[3px] border-ink p-3 no-underline hover:bg-ink hover:text-paper">
+                <span class="meta text-tone-60 group-hover:text-tone-30">{s.no}</span>
+                <span class="mt-1 font-display text-lg leading-tight">{s.title} ↗</span>
+                <span class="mt-1 text-sm" lang="ja">{s.jp}</span>
+              </a>
+            ) : (
+              <span class="flex h-full flex-col border-[3px] border-accent bg-accent p-3 text-accent-ink" aria-current="page">
+                <span class="meta">{s.no} · {t('universe.here')}</span>
+                <span class="mt-1 font-display text-lg leading-tight">{s.title}</span>
+                <span class="mt-1 text-sm" lang="ja">{s.jp}</span>
+              </span>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+    <p class="meta mt-4 text-tone-60">
+      <a href={ARCHIVE_ENTRY} class="underline decoration-accent decoration-2">{t('universe.entry')} ↗</a>
+    </p>
+  </div>
+</section>

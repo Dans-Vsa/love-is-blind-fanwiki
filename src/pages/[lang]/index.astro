@@ -6,6 +6,12 @@ import Picture from '../../components/Picture.astro';
 import SpeechBubble from '../../components/SpeechBubble.astro';
 import WikiCard from '../../components/WikiCard.astro';
 import PostCard from '../../components/PostCard.astro';
+import CharacterShowcase from '../../components/CharacterShowcase.astro';
+import PanelReader from '../../components/PanelReader.astro';
+import TrailerPlayer from '../../components/TrailerPlayer.astro';
+import PriorityGame from '../../components/PriorityGame.astro';
+import RainCanvas from '../../components/RainCanvas.astro';
+import FujimotoUniverse from '../../components/FujimotoUniverse.astro';
 import { getStaticLocalePaths, localePath, useTranslations, type Locale } from '../../i18n';
 import { getPosts, getWiki } from '../../lib/content';
 
@@ -51,6 +57,7 @@ const facts = [
 
       <div class="panel reveal relative min-h-[26rem] overflow-hidden bg-[#0b0b0b] lg:col-span-5 lg:row-span-2" style="--i:1">
         <HeroArt class="absolute inset-0 block h-full w-full" title={lang === 'id' ? 'Ilustrasi orisinal: dua sosok berjalan pulang di bawah hujan deras, piring terbang di atas, satu hati merah' : 'Original illustration: two figures walking home in a downpour, a flying saucer above, one red heart'} />
+        <RainCanvas lang={lang} />
         <Sfx text="ザアアア" class="absolute top-4 left-4 text-5xl [-webkit-text-stroke-color:#f4f1ea]" rotate={6} />
       </div>
     </div>
@@ -85,6 +92,16 @@ const facts = [
     </div>
   </section>
 
+  <!-- CHARACTERS (official art, ink/colour) -->
+  <div class="mx-auto mt-16 max-w-7xl px-4 sm:px-6">
+    <CharacterShowcase lang={lang} />
+  </div>
+
+  <!-- PREMISE READER -->
+  <div class="mx-auto mt-16 max-w-7xl px-4 sm:px-6">
+    <PanelReader lang={lang} />
+  </div>
+
   <!-- QUOTE -->
   <section class="mx-auto mt-16 max-w-7xl px-4 sm:px-6" aria-label="Quote">
     <div class="relative grid items-center gap-6 md:grid-cols-[1fr_auto]">
@@ -94,6 +111,16 @@ const facts = [
       <Sfx text="ドン" class="text-[6rem] sm:text-[9rem]" rotate={-6} solid />
     </div>
   </section>
+
+  <!-- TRAILER -->
+  <div class="mx-auto mt-16 max-w-7xl px-4 sm:px-6">
+    <TrailerPlayer lang={lang} />
+  </div>
+
+  <!-- MINI GAME -->
+  <div class="mx-auto mt-16 max-w-7xl px-4 sm:px-6">
+    <PriorityGame lang={lang} />
+  </div>
 
   <!-- WIKI GRID -->
   <section class="mx-auto mt-16 max-w-7xl px-4 sm:px-6" aria-labelledby="sections-title">
@@ -116,4 +143,9 @@ const facts = [
       {posts.map((p, i) => <li><PostCard lang={lang} entry={p} index={i} /></li>)}
     </ul>
   </section>
+
+  <!-- FUJIMOTO ARCHIVE FAMILY -->
+  <div class="mx-auto mt-16 max-w-7xl px-4 sm:px-6">
+    <FujimotoUniverse lang={lang} />
+  </div>
 </Base>
